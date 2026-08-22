@@ -1,0 +1,7 @@
+--- a/quickshell/Modules/ControlCenter/Models/WidgetModel.qml
++++ b/quickshell/Modules/ControlCenter/Models/WidgetModel.qml
+@@ -165,2 +165,2 @@
+-            "enabled": NetworkService.wifiAvailable,
+-            "warning": !NetworkService.wifiAvailable ? I18n.tr("Wi-Fi not available") : undefined
++            "enabled": NetworkService.networkAvailable,
++            "warning": !NetworkService.networkAvailable ? I18n.tr("No network adapter available") : undefined
