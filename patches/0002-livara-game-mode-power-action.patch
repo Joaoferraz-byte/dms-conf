@@ -1,0 +1,103 @@
+--- a/quickshell/Modals/PowerMenuModal.qml
++++ b/quickshell/Modals/PowerMenuModal.qml
+@@ -2,0 +3 @@
++import Quickshell.Io
+@@ -29,0 +31,3 @@
++    property bool livaraGameModeActive: false
++    readonly property string livaraGameModeControl: Quickshell.env("LIVARA_DMS_GAMEMODE_CONTROL") || ""
++    readonly property bool livaraGameModeAvailable: Quickshell.env("LIVARA_DMS_GAME_MODE") === "1" && livaraGameModeControl.length > 0
+@@ -39 +43 @@
+-        return action !== "lock" && action !== "restart";
++        return action !== "lock" && action !== "restart" && action !== "gamemode";
+@@ -131,0 +136,5 @@
++        if (action === "gamemode") {
++            toggleLivaraGameMode();
++            close();
++            return;
++        }
+@@ -160,0 +170,32 @@
++    Process {
++        id: livaraGameModeStatusProcess
++        command: root.livaraGameModeControl ? [root.livaraGameModeControl, "status"] : []
++        running: false
++        onExited: exitCode => {
++            root.livaraGameModeActive = exitCode === 0;
++        }
++    }
++
++    Process {
++        id: livaraGameModeToggleProcess
++        command: root.livaraGameModeControl ? [root.livaraGameModeControl, "toggle"] : []
++        running: false
++        onExited: exitCode => {
++            if (exitCode !== 0)
++                ToastService.showError(I18n.tr("Could not change Game Mode"));
++            root.refreshLivaraGameMode();
++        }
++    }
++
++    function refreshLivaraGameMode() {
++        if (!livaraGameModeAvailable || livaraGameModeStatusProcess.running || livaraGameModeToggleProcess.running)
++            return;
++        livaraGameModeStatusProcess.running = true;
++    }
++
++    function toggleLivaraGameMode() {
++        if (!livaraGameModeAvailable || livaraGameModeStatusProcess.running || livaraGameModeToggleProcess.running)
++            return;
++        livaraGameModeToggleProcess.running = true;
++    }
++
+@@ -177,0 +219,2 @@
++            if (action === "gamemode" && !livaraGameModeAvailable)
++                return false;
+@@ -267,0 +311,6 @@
++        case "gamemode":
++            return {
++                "icon": root.livaraGameModeActive ? "sports_esports" : "tune",
++                "label": root.livaraGameModeActive ? I18n.tr("Game") : I18n.tr("Normal"),
++                "key": "G"
++            };
+@@ -321,0 +371 @@
++        refreshLivaraGameMode();
+@@ -337 +387,4 @@
+-    Component.onCompleted: updateVisibleActions()
++    Component.onCompleted: {
++        updateVisibleActions();
++        refreshLivaraGameMode();
++    }
+@@ -373 +426 @@
+-            if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter || event.key === Qt.Key_R || event.key === Qt.Key_X || event.key === Qt.Key_L || event.key === Qt.Key_S || event.key === Qt.Key_H || event.key === Qt.Key_D || (event.key === Qt.Key_P && !(event.modifiers & Qt.ControlModifier))) {
++            if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter || event.key === Qt.Key_R || event.key === Qt.Key_X || event.key === Qt.Key_L || event.key === Qt.Key_S || event.key === Qt.Key_H || event.key === Qt.Key_D || event.key === Qt.Key_G || (event.key === Qt.Key_P && !(event.modifiers & Qt.ControlModifier))) {
+@@ -425,0 +479,6 @@
++        case Qt.Key_G:
++            if (visibleActions.includes("gamemode")) {
++                startHold("gamemode", visibleActions.indexOf("gamemode"));
++                event.accepted = true;
++            }
++            break;
+@@ -467 +526 @@
+-            if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter || event.key === Qt.Key_R || event.key === Qt.Key_X || event.key === Qt.Key_L || event.key === Qt.Key_S || event.key === Qt.Key_H || event.key === Qt.Key_D || (event.key === Qt.Key_P && !(event.modifiers & Qt.ControlModifier))) {
++            if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter || event.key === Qt.Key_R || event.key === Qt.Key_X || event.key === Qt.Key_L || event.key === Qt.Key_S || event.key === Qt.Key_H || event.key === Qt.Key_D || event.key === Qt.Key_G || (event.key === Qt.Key_P && !(event.modifiers & Qt.ControlModifier))) {
+@@ -532,0 +592,6 @@
++                event.accepted = true;
++            }
++            break;
++        case Qt.Key_G:
++            if (visibleActions.includes("gamemode")) {
++                startHold("gamemode", visibleActions.indexOf("gamemode"));
+--- a/quickshell/Modules/Settings/PowerSleepTab.qml
++++ b/quickshell/Modules/Settings/PowerSleepTab.qml
+@@ -1,0 +2 @@
++import Quickshell
+@@ -463,0 +465,6 @@
++                                key: "gamemode",
++                                label: I18n.tr("Show Game Mode"),
++                                desc: I18n.tr("Toggle GameMode optimisations for this desktop"),
++                                gameMode: true
++                            },
++                            {
+@@ -477 +484,2 @@
+-                            visible: !modelData.hibernate || SessionService.hibernateSupported
++                            visible: (!modelData.hibernate || SessionService.hibernateSupported)
++                                && (!modelData.gameMode || Quickshell.env("LIVARA_DMS_GAME_MODE") === "1")
