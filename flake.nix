@@ -33,10 +33,10 @@
         dms-shell-livara = mkPackage system;
       });
 
-      homeModules.dank-material-shell = { pkgs, ... }:
+      homeModules.dank-material-shell = { lib, pkgs, ... }:
         {
           imports = [ dms.homeModules.dank-material-shell ];
-          config.programs.dank-material-shell.package = self.packages.${pkgs.system}.default;
+          config.programs.dank-material-shell.package = lib.mkForce self.packages.${pkgs.system}.default;
         };
 
       homeModules.default = self.homeModules.dank-material-shell;
