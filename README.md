@@ -29,7 +29,7 @@ flake.nix
 README.md
 ```
 
-O pacote é derivado de `dms.lib.mkDmsShell` e aplica os patches depois que o upstream instala o código QML. O `homeModule` do dms-conf importa o módulo oficial e força `programs.dank-material-shell.package` para o derivado patchado. Nenhum arquivo do DMS é editado no `/nix/store` e o clone upstream permanece somente como fonte de comparação.
+O pacote é derivado de `dms.lib.mkDmsShell`. No commit pinado, o upstream compila o Go a partir do source root `core` e, no `installPhase`, copia o QML a partir da fonte imutável. O dms-conf preserva esse copy, torna somente a cópia em `$out/share/quickshell/dms` gravável e aplica os patches nessa cópia dentro do mesmo `installPhase`; isso evita tentar escrever na fonte do `/nix/store`, que causou a falha observada. O `homeModule` do dms-conf importa o módulo oficial e força `programs.dank-material-shell.package` para o derivado patchado. Nenhum arquivo do DMS é editado no `/nix/store` e o clone upstream permanece somente como fonte de comparação.
 
 O patch deve ser pequeno, ter uma justificativa e indicar o arquivo upstream afetado. Não se deve copiar o DMS inteiro para `shell-conf`, duplicar templates nativos, ou editar arquivos materializados em `/nix/store`.
 
@@ -47,7 +47,7 @@ Mudanças de paleta, adapters de aplicações, launcher, fastfetch, AudioRelay, 
 
 ## Estado atual
 
-O repositório contém agora dois patches opt-in aplicados pelo pacote: o widget Network passa a ser habilitado por `NetworkService.networkAvailable`, permitindo Ethernet no host sem Wi-Fi; e o PowerMenu recebe uma ação Game/Normal condicionada às variáveis `LIVARA_DMS_GAME_MODE` e `LIVARA_DMS_GAMEMODE_CONTROL`. O segundo patch não altera os três perfis nativos do PowerProfiles e não aparece no Latitude.
+O repositório contém agora dois patches opt-in aplicados pelo pacote: o widget Network passa a ser habilitado por `NetworkService.networkAvailable`, permitindo Ethernet no host sem Wi-Fi; e o PowerMenu recebe uma ação Game/Normal condicionada às variáveis `LIVARA_DMS_GAME_MODE` e `LIVARA_DMS_GAMEMODE_CONTROL`. O segundo patch não altera os três perfis nativos do PowerProfiles e não aparece no Latitude. A aplicação foi testada no pacote real: `patchPhase`/Go/check passam, o `installPhase` copia o QML, aplica os dois patches e o `fixupPhase` conclui sem erro.
 
 O botão Game é implementado como request de GameMode mantido por um serviço de usuário do myMachine. O backend em `nix-conf` usa `gamemoded -r`, lê estado via `systemctl --user is-active` e libera a requisição com `SIGINT`; GameMode permanece semanticamente separado de `power-profiles-daemon`.
 
