@@ -21,10 +21,25 @@
         (dms.lib.mkDmsShell pkgs).overrideAttrs (old: {
           pname = "dms-shell-livara";
           nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ pkgs.patch ];
-          postInstall = (old.postInstall or "") + ''
-            patch -p2 -d "$out/share/quickshell/dms" < "${./patches/0001-livara-network-widget-on-ethernet.patch}"
-            patch -p2 -d "$out/share/quickshell/dms" < "${./patches/0002-livara-game-mode-power-action.patch}"
-          '';
+          # mkDmsShell intentionally builds the Go core from a reduced `core`
+          # source archive and copies QML from the full immutable DMS source in
+          # postInstall. Make that copy writable before patching it in-place.
+          postInstall =
+            let
+              original = old.postInstall or "";
+              copyLines = nixpkgs.lib.filter
+                (line: builtins.match "cp -r /nix/store/.*-source/quickshell/\\..*" line != null)
+                (nixpkgs.lib.splitString "\n" original);
+              copyLine = if copyLines == [ ] then
+                throw "dms-conf: upstream postInstall no longer contains the expected QML copy"
+              else
+                builtins.head copyLines;
+              writableCopy = copyLine + "\nchmod -R u+w $out/share/quickshell/dms";
+            in
+            nixpkgs.lib.replaceStrings [ copyLine ] [ writableCopy ] original + ''
+              patch -p2 -d "$out/share/quickshell/dms" < "${./patches/0001-livara-network-widget-on-ethernet.patch}"
+              patch -p2 -d "$out/share/quickshell/dms" < "${./patches/0002-livara-game-mode-power-action.patch}"
+            '';
         });
     in
     {
