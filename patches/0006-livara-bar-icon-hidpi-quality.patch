@@ -1,0 +1,46 @@
+--- a/quickshell/Modules/DankBar/Widgets/RunningApps.qml
++++ b/quickshell/Modules/DankBar/Widgets/RunningApps.qml
+@@ -319,6 +319,21 @@
+                             }
+                         }
+ 
++                        // LIVARA_DMS_HIDPI_ICON: Quickshell's IconImage.qml caps the inner
++                        // Image's sourceSize at actualSize = Math.min(width, height)
++                        // (~18-19px for the bar). On HiDPI the compositor upscales this
++                        // tiny bitmap -> blur. Override the inner Image's sourceSize to
++                        // decode at full physical resolution (actualSize * DPR).
++                        Binding {
++                            target: iconImg.backer
++                            property: "sourceSize"
++                            value: Qt.size(
++                                Math.ceil(iconImg.actualSize * (Screen.devicePixelRatio || 1)),
++                                Math.ceil(iconImg.actualSize * (Screen.devicePixelRatio || 1))
++                            )
++                            restoreMode: Binding.RestoreBindingOrValue
++                        }
++
+                         DankIcon {
+                             anchors.left: parent.left
+                             anchors.leftMargin: (widgetData?.runningAppsCompactMode !== undefined ? widgetData.runningAppsCompactMode : SettingsData.runningAppsCompactMode) ? Math.round((parent.width - Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale)) / 2) : Theme.spacingXS
+@@ -563,6 +578,21 @@
+                             }
+                         }
+ 
++                        // LIVARA_DMS_HIDPI_ICON: Quickshell's IconImage.qml caps the inner
++                        // Image's sourceSize at actualSize = Math.min(width, height)
++                        // (~18-19px for the bar). On HiDPI the compositor upscales this
++                        // tiny bitmap -> blur. Override the inner Image's sourceSize to
++                        // decode at full physical resolution (actualSize * DPR).
++                        Binding {
++                            target: iconImg.backer
++                            property: "sourceSize"
++                            value: Qt.size(
++                                Math.ceil(iconImg.actualSize * (Screen.devicePixelRatio || 1)),
++                                Math.ceil(iconImg.actualSize * (Screen.devicePixelRatio || 1))
++                            )
++                            restoreMode: Binding.RestoreBindingOrValue
++                        }
++
+                         DankIcon {
+                             anchors.left: parent.left
+                             anchors.leftMargin: (widgetData?.runningAppsCompactMode !== undefined ? widgetData.runningAppsCompactMode : SettingsData.runningAppsCompactMode) ? Math.round((parent.width - Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale)) / 2) : Theme.spacingXS
