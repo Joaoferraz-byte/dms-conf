@@ -52,6 +52,8 @@
               patchCommands = ''
                 patch -p2 -d "$out/share/quickshell/dms" < "${./patches/0001-livara-network-widget-on-ethernet.patch}"
                 patch -p2 -d "$out/share/quickshell/dms" < "${./patches/0002-livara-game-mode-power-action.patch}"
+                patch -p2 -d "$out/share/quickshell/dms" < "${./patches/0003-livara-remove-weather-sky-graph.patch}"
+                patch -p2 -d "$out/share/quickshell/dms" < "${./patches/0004-livara-power-button-fallback.patch}"
                 # Verify patches landed: each patch introduces a unique marker
                 # string that must be present in the installed QML after patching.
                 grep -q 'NetworkService\.networkAvailable' "$out/share/quickshell/dms/Modules/ControlCenter/Models/WidgetModel.qml" \
@@ -60,6 +62,10 @@
                   || { echo "dms-conf: game-mode patch marker missing in PowerMenuModal.qml" >&2; exit 1; }
                 grep -q 'modelData\.gameMode' "$out/share/quickshell/dms/Modules/Settings/PowerSleepTab.qml" \
                   || { echo "dms-conf: game-mode patch marker missing in PowerSleepTab.qml" >&2; exit 1; }
+                grep -q 'LIVARA_DMS_WEATHER_NO_SKY' "$out/share/quickshell/dms/Modules/DankDash/WeatherTab.qml" \
+                  || { echo "dms-conf: weather-sky-graph patch marker missing in WeatherTab.qml" >&2; exit 1; }
+                grep -q 'LIVARA_DMS_POWER_BUTTON' "$out/share/quickshell/dms/Modules/DankBar/Widgets/ControlCenterButton.qml" \
+                  || { echo "dms-conf: power-button patch marker missing in ControlCenterButton.qml" >&2; exit 1; }
               '';
             in
             nixpkgs.lib.replaceStrings [ copyLine ] [ writableCopy ] original + patchCommands;
@@ -91,6 +97,8 @@
             chmod -R u+w "$out"
             patch -p2 -d "$out" < "${./patches/0001-livara-network-widget-on-ethernet.patch}"
             patch -p2 -d "$out" < "${./patches/0002-livara-game-mode-power-action.patch}"
+            patch -p2 -d "$out" < "${./patches/0003-livara-remove-weather-sky-graph.patch}"
+            patch -p2 -d "$out" < "${./patches/0004-livara-power-button-fallback.patch}"
             # Verify content-level markers so a silently-rejected patch fails the check.
             grep -q 'NetworkService\.networkAvailable' "$out/Modules/ControlCenter/Models/WidgetModel.qml" \
               || { echo "check: network-widget patch marker missing" >&2; exit 1; }
@@ -98,6 +106,10 @@
               || { echo "check: game-mode patch marker missing in PowerMenuModal" >&2; exit 1; }
             grep -q 'modelData\.gameMode' "$out/Modules/Settings/PowerSleepTab.qml" \
               || { echo "check: game-mode patch marker missing in PowerSleepTab" >&2; exit 1; }
+            grep -q 'LIVARA_DMS_WEATHER_NO_SKY' "$out/Modules/DankDash/WeatherTab.qml" \
+              || { echo "check: weather-sky-graph patch marker missing in WeatherTab" >&2; exit 1; }
+            grep -q 'LIVARA_DMS_POWER_BUTTON' "$out/Modules/DankBar/Widgets/ControlCenterButton.qml" \
+              || { echo "check: power-button patch marker missing in ControlCenterButton" >&2; exit 1; }
           '';
         });
     };
