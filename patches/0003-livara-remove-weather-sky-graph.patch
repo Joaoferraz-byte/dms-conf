@@ -513,7 +513,7 @@
          Item {
              width: parent.width
 -            height: root.height - heroCard.height - skyDateRow.height - chipsRow.height - mainColumn.spacing * 3
-+            height: root.height - heroCard.height - chipsRow.height - mainColumn.spacing * 2 - Theme.spacingXL  // LIVARA_DMS_WEATHER_NO_SKY: skyDateRow removed, spacing *3->*2, extra spacingXL reduction so day forecast cards are shorter
++            height: root.height - heroCard.height - chipsRow.height - mainColumn.spacing * 2  // LIVARA_DMS_WEATHER_NO_SKY: skyDateRow removed, spacing reduced from *3 to *2
  
              Loader {
                  id: dailyLoader
