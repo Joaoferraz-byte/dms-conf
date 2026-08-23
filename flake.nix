@@ -58,7 +58,7 @@
                   || { echo "dms-conf: network-widget patch marker missing in WidgetModel.qml" >&2; exit 1; }
                 grep -q 'LIVARA_DMS_GAME_MODE' "$out/share/quickshell/dms/Modals/PowerMenuModal.qml" \
                   || { echo "dms-conf: game-mode patch marker missing in PowerMenuModal.qml" >&2; exit 1; }
-                grep -q 'LIVARA_DMS_GAMEMODE_CONTROL' "$out/share/quickshell/dms/Modules/Settings/PowerSleepTab.qml" \
+                grep -q 'modelData\.gameMode' "$out/share/quickshell/dms/Modules/Settings/PowerSleepTab.qml" \
                   || { echo "dms-conf: game-mode patch marker missing in PowerSleepTab.qml" >&2; exit 1; }
               '';
             in
@@ -96,7 +96,7 @@
               || { echo "check: network-widget patch marker missing" >&2; exit 1; }
             grep -q 'LIVARA_DMS_GAME_MODE' "$out/Modals/PowerMenuModal.qml" \
               || { echo "check: game-mode patch marker missing in PowerMenuModal" >&2; exit 1; }
-            grep -q 'LIVARA_DMS_GAMEMODE_CONTROL' "$out/Modules/Settings/PowerSleepTab.qml" \
+            grep -q 'modelData\.gameMode' "$out/Modules/Settings/PowerSleepTab.qml" \
               || { echo "check: game-mode patch marker missing in PowerSleepTab" >&2; exit 1; }
           '';
         });
