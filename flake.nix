@@ -55,6 +55,7 @@
                 patch -p2 -d "$out/share/quickshell/dms" < "${./patches/0003-livara-remove-weather-sky-graph.patch}"
                 patch -p2 -d "$out/share/quickshell/dms" < "${./patches/0004-livara-power-button-fallback.patch}"
                 patch -p2 -d "$out/share/quickshell/dms" < "${./patches/0006-livara-bar-icon-hidpi-quality.patch}"
+                patch -p2 -d "$out/share/quickshell/dms" < "${./patches/0007-livara-hide-calendar-when-no-backend.patch}"
                 # Verify patches landed: each patch introduces a unique marker
                 # string that must be present in the installed QML after patching.
                 grep -q 'NetworkService\.networkAvailable' "$out/share/quickshell/dms/Modules/ControlCenter/Models/WidgetModel.qml" \
@@ -69,6 +70,8 @@
                   || { echo "dms-conf: power-button patch marker missing in ControlCenterButton.qml" >&2; exit 1; }
                 grep -q 'LIVARA_DMS_HIDPI_ICON' "$out/share/quickshell/dms/Modules/DankBar/Widgets/RunningApps.qml" \
                   || { echo "dms-conf: bar-icon-hidpi patch marker missing in RunningApps.qml" >&2; exit 1; }
+                grep -q 'LIVARA_DMS_HIDE_CALENDAR_NO_BACKEND' "$out/share/quickshell/dms/Modules/DankDash/OverviewTab.qml" \
+                  || { echo "dms-conf: hide-calendar patch marker missing in OverviewTab.qml" >&2; exit 1; }
               '';
             in
             nixpkgs.lib.replaceStrings [ copyLine ] [ writableCopy ] original + patchCommands;
@@ -103,6 +106,7 @@
             patch -p2 -d "$out" < "${./patches/0003-livara-remove-weather-sky-graph.patch}"
             patch -p2 -d "$out" < "${./patches/0004-livara-power-button-fallback.patch}"
             patch -p2 -d "$out" < "${./patches/0006-livara-bar-icon-hidpi-quality.patch}"
+            patch -p2 -d "$out" < "${./patches/0007-livara-hide-calendar-when-no-backend.patch}"
             # Verify content-level markers so a silently-rejected patch fails the check.
             grep -q 'NetworkService\.networkAvailable' "$out/Modules/ControlCenter/Models/WidgetModel.qml" \
               || { echo "check: network-widget patch marker missing" >&2; exit 1; }
@@ -116,6 +120,8 @@
               || { echo "check: power-button patch marker missing in ControlCenterButton" >&2; exit 1; }
             grep -q 'LIVARA_DMS_HIDPI_ICON' "$out/Modules/DankBar/Widgets/RunningApps.qml" \
               || { echo "check: bar-icon-hidpi patch marker missing in RunningApps" >&2; exit 1; }
+            grep -q 'LIVARA_DMS_HIDE_CALENDAR_NO_BACKEND' "$out/Modules/DankDash/OverviewTab.qml" \
+              || { echo "check: hide-calendar patch marker missing in OverviewTab" >&2; exit 1; }
           '';
         });
     };
