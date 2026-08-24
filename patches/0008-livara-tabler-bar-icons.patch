@@ -1,5 +1,5 @@
---- a/quickshell/Widgets/DankIcon.qml	2026-08-24 22:01:19.775256986 +0000
-+++ b/quickshell/Widgets/DankIcon.qml	2026-08-24 22:01:19.779256986 +0000
+--- a/quickshell/Widgets/DankIcon.qml
++++ b/quickshell/Widgets/DankIcon.qml
 @@ -1,16 +1,34 @@
 +// LIVARA_DMS_TABLER_ICONS: Replaces the upstream DankIcon (which renders
 +// Material Symbols Rounded ligature glyphs via font.variableAxes) with a
@@ -40,7 +40,7 @@
      property bool smoothTransform: false
  
      implicitWidth: Math.round(size)
-@@ -18,17 +36,261 @@
+@@ -18,17 +36,272 @@
  
      signal rotationCompleted
  
@@ -54,7 +54,6 @@
  
 +    // --- Material Symbols name -> Tabler Icons codepoint map ---
 +    readonly property var _tablerMap: ({
-+        "Print": "\ueb0e", // printer — Printers widget (uppercase P in WidgetModel.qml)
 +        "account_circle": "\uf68", // user-circle
 +        "add": "\ueb0b", // plus
 +        "add_circle": "\uea69", // circle-plus
@@ -63,7 +62,10 @@
 +        "analytics": "\uea59", // chart-bar
 +        "apps": "\uebb6", // apps — app launcher grid
 +        "arrow_back": "\uea19", // arrow-left
++        "arrow_downward": "\uea16", // arrow-down
++        "arrow_right": "\uea1f", // arrow-right
 +        "arrow_selector_tool": "\ueb0c", // point
++        "arrow_upward": "\uea25", // arrow-up
 +        "assignment": "\uea6d", // clipboard-list
 +        "assistant_device": "\uf00b", // robot
 +        "auto_awesome_mosaic": "\ueaba", // grid-dots
@@ -104,6 +106,7 @@
 +        "chevron_right": "\uea61", // chevron-right
 +        "clarify": "\uea08", // align-justified
 +        "clear": "\ueb8b", // eraser
++        "clear_all": "\uee41", // clear-all
 +        "clear_day": "\ueb30", // sun
 +        "clear_night": "\ueaf8", // moon
 +        "close": "\ueb55", // x
@@ -138,6 +141,7 @@
 +        "error": "\uea05", // alert-circle
 +        "expand_content": "\uea28", // arrows-maximize
 +        "expand_more": "\uea5f", // chevron-down
++        "explore": "\uea79", // compass
 +        "extension": "\ueb10", // puzzle
 +        "foggy": "\uecd9", // cloud-fog
 +        "folder": "\ueaad", // folder
@@ -170,6 +174,7 @@
 +        "low_priority": "\uea16", // arrow-down
 +        "mango": "\uef10", // lemon
 +        "memory": "\uef8e", // cpu
++        "menu_book": "\uea39", // book
 +        "mic": "\ueaf0", // microphone
 +        "mic_off": "\ued16", // microphone-off
 +        "minimize": "\ueaf1", // minimize
@@ -187,6 +192,7 @@
 +        "notifications_none": "\uea35", // bell
 +        "notifications_off": "\uece9", // bell-off
 +        "open_in_full": "\uea28", // arrows-maximize
++        "open_in_new": "\uea99", // external-link
 +        "package_2": "\ueaff", // package
 +        "palette": "\ueb01", // palette
 +        "partly_cloudy_day": "\uf237", // sun-low
@@ -198,6 +204,7 @@
 +        "play_arrow": "\ued46", // player-play
 +        "power": "\ueb0d", // power
 +        "power_settings_new": "\ueb0d", // power
++        "Print": "\ueb0e", // printer — Printers widget (uppercase P in WidgetModel.qml)
 +        "print": "\ueb0e", // printer
 +        "print_disabled": "\uf184", // printer-off
 +        "priority_high": "\uecc6", // alert-octagon
@@ -210,10 +217,12 @@
 +        "responsive_layout": "\ueadb", // layout
 +        "right": "\uea1f", // arrow-right
 +        "rule": "\uebc2", // scale
++        "save": "\ueb62", // device-floppy
 +        "schedule": "\uea70", // clock
 +        "screen_record": "\ued22", // video
 +        "screen_share": "\ued18", // screen-share
 +        "scrollable_header": "\ueadb", // layout
++        "sd_card": "\uf384", // device-sd-card
 +        "search": "\ueb1c", // search
 +        "search_off": "\uf19c", // search-off
 +        "security": "\ueb24", // shield
@@ -245,6 +254,7 @@
 +        "thunderstorm": "\uf84b", // cloud-bolt
 +        "toolbar": "\uebca", // tools
 +        "tune": "\uea03", // adjustments
++        "verified_user": "\ueb22", // shield-check
 +        "videocam": "\ued22", // video
 +        "view_carousel": "\uf659", // carousel-horizontal
 +        "view_compact": "\uf02c", // layout-dashboard
@@ -254,6 +264,7 @@
 +        "view_week": "\uea53", // calendar
 +        "visibility": "\uea9a", // eye
 +        "visibility_off": "\uecf0", // eye-off
++        "vital_signs": "\uef92", // heartbeat
 +        "volume_down": "\ueb4f", // volume-2
 +        "volume_mute": "\uf1c3", // volume-off
 +        "volume_off": "\uf1c3", // volume-off
@@ -305,7 +316,7 @@
          font.pixelSize: Math.round(Theme.fontSizeMedium)
          font.weight: root.weight
          font.hintingPreference: Font.PreferNoHinting
-@@ -36,29 +297,10 @@
+@@ -36,29 +309,10 @@
          verticalAlignment: Text.AlignVCenter
          horizontalAlignment: Text.AlignHCenter
          renderType: root.smoothTransform ? Text.QtRendering : Text.NativeRendering
