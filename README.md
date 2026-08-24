@@ -35,8 +35,16 @@ Palette changes, application adapters, launcher, fastfetch, AudioRelay, Nautilus
 
 ## Current state
 
-The repository contains two opt-in patches applied by the package: the Network widget is enabled by `NetworkService.networkAvailable`, allowing Ethernet on hosts without Wi-Fi; and the PowerMenu receives a Game/Normal action conditioned on the `LIVARA_DMS_GAME_MODE` and `LIVARA_DMS_GAMEMODE_CONTROL` variables. The second patch does not alter the three native PowerProfiles and does not appear on the Latitude. Application was tested on the real package: `patchPhase`/Go/check pass, `installPhase` copies QML, applies both patches, and `fixupPhase` completes without error.
+The repository applies the following patches to the pinned DMS QML tree:
 
-The Game button is implemented as a GameMode request maintained by a user service. The backend in `nix-conf` uses `gamemoded -r`, reads state via `systemctl --user is-active`, and releases the request with `SIGINT`; GameMode remains semantically separate from `power-profiles-daemon`.
+- **0001 network-widget-on-ethernet** — the Network control-center widget is enabled by `NetworkService.networkAvailable`, allowing Ethernet on hosts without Wi-Fi.
+- **0002 game-mode-power-action** — the PowerMenu receives a Game/Normal action conditioned on the `LIVARA_DMS_GAME_MODE` and `LIVARA_DMS_GAMEMODE_CONTROL` variables. This does not alter the three native PowerProfiles and does not appear on the Latitude. The Game button is implemented as a GameMode request maintained by a user service; the backend in `nix-conf` uses `gamemoded -r`, reads state via `systemctl --user is-active`, and releases the request with `SIGINT`. GameMode remains semantically separate from `power-profiles-daemon`.
+- **0003 remove-weather-sky-graph** — removes the sky-graph canvas from the DankDash weather tab, leaving the compact condition display.
+- **0004 power-button-fallback** — adds a fallback power button to the ControlCenter when the canonical power action is unavailable.
+- **0006 bar-icon-hidpi-quality** — improves icon rendering quality on HiDPI displays for the RunningApps bar widget.
+- **0007 hide-calendar-when-no-backend** — hides the DankDash calendar widget when no calendar backend is configured.
+- **0008 tabler-bar-icons** — replaces the Material Symbols Rounded renderer in `Widgets/DankIcon.qml` with a Tabler Icons renderer matching the Noctara-Dots / Noctalia v5 design language. The component preserves the upstream API (`name`, `size`, `color`, `filled`, `fill`, `grade`, `weight`, `smoothTransform`, `rotationCompleted`) so every existing call-site works unchanged; an internal lookup table translates each Material Symbols ligature name to the corresponding Tabler Icons Unicode codepoint. The Tabler Icons TTF (`tabler-icons.ttf` v3.34.0) is bundled in `assets/fonts/tabler-icons/` and installed alongside the DMS QML. Unmapped names fall back to a help glyph so missing mappings are visually obvious. Only bar widget icons are affected; the application icon theme (Kora) and the DankDash weather-tab nerdfont icons (DankNFIcon) are untouched.
+
+Each patch introduces a unique `LIVARA_DMS_*` marker string that is verified after application; a missing marker fails the build. The `patches-apply` check applies all patches to a copy of the pinned QML tree and verifies every marker.
 
 Nautilus, Fastfetch/Roxy, AudioRelay, Matugen/adapters, and tablet detection remain outside dms-conf. In particular, GIO metadata already fixes the folder icon in Nautilus content view, but the bookmarks sidebar uses symbolic icons per the upstream contract; a bookmark patch should originate in the Nautilus repository, not be hidden inside DMS.
