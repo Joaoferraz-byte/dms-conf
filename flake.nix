@@ -64,6 +64,7 @@
                 cp "${./assets/fonts/tabler-icons/tabler-icons.ttf}" \
                   "$out/share/quickshell/dms/assets/fonts/tabler-icons/tabler-icons.ttf"
                 patch -p2 -d "$out/share/quickshell/dms" < "${./patches/0008-livara-tabler-bar-icons.patch}"
+                patch -p2 -d "$out/share/quickshell/dms" < "${./patches/0009-livara-kora-icon-flicker-fix.patch}"
                 # Verify patches landed: each patch introduces a unique marker
                 # string that must be present in the installed QML after patching.
                 grep -q 'NetworkService\.networkAvailable' "$out/share/quickshell/dms/Modules/ControlCenter/Models/WidgetModel.qml" \
@@ -84,6 +85,12 @@
                   || { echo "dms-conf: tabler-bar-icons patch marker missing in DankIcon.qml" >&2; exit 1; }
                 test -f "$out/share/quickshell/dms/assets/fonts/tabler-icons/tabler-icons.ttf" \
                   || { echo "dms-conf: Tabler Icons font not installed" >&2; exit 1; }
+                grep -q 'LIVARA_DMS_ICON_PREWARM' "$out/share/quickshell/dms/Services/IconThemeService.qml" \
+                  || { echo "dms-conf: kora-icon-flicker patch marker missing in IconThemeService.qml" >&2; exit 1; }
+                grep -q 'LIVARA_DMS_ICON_NO_FLICKER_FALLBACK' "$out/share/quickshell/dms/Common/Paths.qml" \
+                  || { echo "dms-conf: kora-icon-flicker patch marker missing in Paths.qml" >&2; exit 1; }
+                grep -q 'LIVARA_DMS_ICON_PREWARM' "$out/share/quickshell/dms/Services/AppSearchService.qml" \
+                  || { echo "dms-conf: kora-icon-flicker patch marker missing in AppSearchService.qml" >&2; exit 1; }
               '';
             in
             nixpkgs.lib.replaceStrings [ copyLine ] [ writableCopy ] original + patchCommands;
@@ -123,6 +130,7 @@
             cp "${./assets/fonts/tabler-icons/tabler-icons.ttf}" \
               "$out/assets/fonts/tabler-icons/tabler-icons.ttf"
             patch -p2 -d "$out" < "${./patches/0008-livara-tabler-bar-icons.patch}"
+            patch -p2 -d "$out" < "${./patches/0009-livara-kora-icon-flicker-fix.patch}"
             # Verify content-level markers so a silently-rejected patch fails the check.
             grep -q 'NetworkService\.networkAvailable' "$out/Modules/ControlCenter/Models/WidgetModel.qml" \
               || { echo "check: network-widget patch marker missing" >&2; exit 1; }
@@ -142,6 +150,12 @@
               || { echo "check: tabler-bar-icons patch marker missing in DankIcon.qml" >&2; exit 1; }
             test -f "$out/assets/fonts/tabler-icons/tabler-icons.ttf" \
               || { echo "check: Tabler Icons font not installed" >&2; exit 1; }
+            grep -q 'LIVARA_DMS_ICON_PREWARM' "$out/Services/IconThemeService.qml" \
+              || { echo "check: kora-icon-flicker patch marker missing in IconThemeService.qml" >&2; exit 1; }
+            grep -q 'LIVARA_DMS_ICON_NO_FLICKER_FALLBACK' "$out/Common/Paths.qml" \
+              || { echo "check: kora-icon-flicker patch marker missing in Paths.qml" >&2; exit 1; }
+            grep -q 'LIVARA_DMS_ICON_PREWARM' "$out/Services/AppSearchService.qml" \
+              || { echo "check: kora-icon-flicker patch marker missing in AppSearchService.qml" >&2; exit 1; }
           '';
         });
     };

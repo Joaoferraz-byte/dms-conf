@@ -1,0 +1,155 @@
+--- a/quickshell/Services/IconThemeService.qml	2026-08-24 12:47:54.785268522 +0000
++++ b/quickshell/Services/IconThemeService.qml	2026-08-24 12:47:54.785268522 +0000
+@@ -117,6 +117,74 @@
+         }, 0);
+     }
+ 
++    // LIVARA_DMS_ICON_PREWARM
++    // Returns true when an icon name has been queued for async resolution
++    // but the result is not yet available.  Callers (Paths.themedIconPath)
++    // use this to avoid showing the hicolor fallback while the themed icon
++    // is still being looked up, which prevents the visible "default icon
++    // then Kora icon" flicker when scrolling the launcher.
++    function isResolving(name) {
++        const _dep = revision;
++        if (!managedTheme || !name)
++            return false;
++        if (_dirsForTheme !== managedTheme || _searchDirs.length === 0)
++            return false;
++        return (name in _cache) && _cache[name] === null;
++    }
++
++    // Batch-resolve a list of icon names with a single find invocation.
++    // This populates the cache for all app icons before the launcher
++    // renders its result rows, so the first paint already has the correct
++    // themed icon path and no async fallback is needed.
++    function preWarm(names) {
++        if (!managedTheme || !names || names.length === 0)
++            return;
++        if (_dirsForTheme !== managedTheme || _searchDirs.length === 0)
++            return;
++        const dirs = _searchDirs.join(" ");
++        const pending = [];
++        const seen = new Set();
++        for (let i = 0; i < names.length; i++) {
++            const name = names[i];
++            if (!name || name.startsWith("/") || name.startsWith("file://") || name.startsWith("image://") || name.startsWith("~"))
++                continue;
++            if (!/^[\w.+-]+$/.test(name))
++                continue;
++            if (name in _cache)
++                continue;
++            if (seen.has(name))
++                continue;
++            seen.add(name);
++            _cache[name] = null;
++            pending.push(name);
++        }
++        if (pending.length === 0)
++            return;
++        const patterns = pending.map(n => `-name '${n}.svg' -o -name '${n}.png'`).join(" -o ");
++        const script = `find -L ${dirs} \( ${patterns} \) 2>/dev/null`;
++        Proc.runCommand("iconPreWarm", ["sh", "-c", script], (out, code) => {
++            const lines = (out || "").trim().split("\n").filter(s => s);
++            const byName = ({});
++            for (let i = 0; i < lines.length; i++) {
++                const path = lines[i];
++                const base = path.split("/").pop().replace(/\.(svg|png)$/, "");
++                if (!byName[base])
++                    byName[base] = [];
++                byName[base].push(path);
++            }
++            const c = root._cache;
++            for (let i = 0; i < pending.length; i++) {
++                const name = pending[i];
++                const paths = byName[name] || [];
++                const best = root._pickBest(paths);
++                c[name] = best ? Paths.toFileUrl(best) : "";
++            }
++            root._cache = c;
++            root._bumpRevision();
++        }, 0);
++    }
++
++
+     function _pickBest(paths) {
+         let best = "";
+         let bestScore = -1;
+--- a/quickshell/Common/Paths.qml	2026-08-24 12:47:54.785268522 +0000
++++ b/quickshell/Common/Paths.qml	2026-08-24 12:47:54.789268523 +0000
+@@ -95,9 +95,25 @@
+         const themed = iconResolver ? iconResolver(name) : "";
+         if (themed)
+             return themed;
++        // LIVARA_DMS_ICON_NO_FLICKER_FALLBACK
++        // When a managed icon theme is active and the icon name has been
++        // queued for async resolution but the result is not yet available,
++        // return an empty string so AppIconRenderer shows its letter-avatar
++        // fallback instead of the hicolor/default icon.  This prevents the
++        // visible "default icon then Kora icon" change when scrolling the
++        // launcher.  Once resolution completes (revision bump) the binding
++        // re-evaluates and the correct themed icon appears.
++        if (iconResolver && IconThemeService.isResolving(name))
++            return "";
+         return Quickshell.iconPath(name, true);
+     }
+ 
++    function preWarmIcons(names) {
++        if (iconResolver && IconThemeService.preWarm)
++            IconThemeService.preWarm(names);
++    }
++
++
+     function resolveIconPath(iconName: string): string {
+         if (!iconName)
+             return "";
+--- a/quickshell/Services/AppSearchService.qml	2026-08-24 12:47:54.785268522 +0000
++++ b/quickshell/Services/AppSearchService.qml	2026-08-24 12:47:54.789268523 +0000
+@@ -53,6 +53,27 @@
+         _cachedCategories = null;
+         _cachedVisibleApps = null;
+         invalidateLauncherCache();
++        _preWarmIconCache();
++    }
++
++    // LIVARA_DMS_ICON_PREWARM
++    // Collect all app icon names and batch-resolve them through
++    // IconThemeService so the launcher's first paint already has the
++    // correct themed icon paths.  This eliminates the async find delay
++    // that caused icons to appear as hicolor defaults before switching
++    // to the themed (Kora) icon while scrolling.  preWarm() skips names
++    // already in the cache, so repeated calls are cheap; the Proc
++    // debouncer (id "iconPreWarm") coalesces rapid calls into one find.
++    function _preWarmIconCache() {
++        const apps = applications || [];
++        const names = [];
++        for (let i = 0; i < apps.length; i++) {
++            const icon = apps[i]?.icon;
++            if (icon && typeof icon === "string" && icon.length > 0)
++                names.push(icon);
++        }
++        if (names.length > 0)
++            Paths.preWarmIcons(names);
+     }
+ 
+     function invalidateLauncherCache() {
+@@ -425,6 +446,19 @@
+         }
+     }
+ 
++    // LIVARA_DMS_ICON_PREWARM
++    // Re-prewarm when the icon theme search-directory chain is rebuilt.
++    // revision bumps when IconThemeService._rebuild() finishes populating
++    // _searchDirs (on startup and on theme change).  This covers the
++    // startup race where _rebuild() completes after AppSearchService has
++    // already called _preWarmIconCache() with an empty search-dir list.
++    Connections {
++        target: IconThemeService
++        function onRevisionChanged() {
++            _preWarmIconCache();
++        }
++    }
++
+     Component.onCompleted: {
+         _rebuildHiddenSet();
+         refreshApplications();
