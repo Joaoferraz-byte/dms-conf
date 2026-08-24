@@ -65,6 +65,7 @@
                   "$out/share/quickshell/dms/assets/fonts/tabler-icons/tabler-icons.ttf"
                 patch -p2 -d "$out/share/quickshell/dms" < "${./patches/0008-livara-tabler-bar-icons.patch}"
                 patch -p2 -d "$out/share/quickshell/dms" < "${./patches/0009-livara-kora-icon-flicker-fix.patch}"
+                patch -p2 -d "$out/share/quickshell/dms" < "${./patches/0010-livara-bar-icon-hd-source-size.patch}"
                 # Verify patches landed: each patch introduces a unique marker
                 # string that must be present in the installed QML after patching.
                 grep -q 'NetworkService\.networkAvailable' "$out/share/quickshell/dms/Modules/ControlCenter/Models/WidgetModel.qml" \
@@ -91,6 +92,10 @@
                   || { echo "dms-conf: kora-icon-flicker patch marker missing in Paths.qml" >&2; exit 1; }
                 grep -q 'LIVARA_DMS_ICON_PREWARM' "$out/share/quickshell/dms/Services/AppSearchService.qml" \
                   || { echo "dms-conf: kora-icon-flicker patch marker missing in AppSearchService.qml" >&2; exit 1; }
+                grep -q 'LIVARA_DMS_ICON_HD_SOURCE_SIZE' "$out/share/quickshell/dms/Modules/DankBar/Widgets/FocusedApp.qml" \
+                  || { echo "dms-conf: bar-icon-hd patch marker missing in FocusedApp.qml" >&2; exit 1; }
+                grep -q 'LIVARA_DMS_ICON_HD_SOURCE_SIZE' "$out/share/quickshell/dms/Modules/DankBar/Widgets/WorkspaceSwitcher.qml" \
+                  || { echo "dms-conf: bar-icon-hd patch marker missing in WorkspaceSwitcher.qml" >&2; exit 1; }
               '';
             in
             nixpkgs.lib.replaceStrings [ copyLine ] [ writableCopy ] original + patchCommands;
@@ -131,6 +136,7 @@
               "$out/assets/fonts/tabler-icons/tabler-icons.ttf"
             patch -p2 -d "$out" < "${./patches/0008-livara-tabler-bar-icons.patch}"
             patch -p2 -d "$out" < "${./patches/0009-livara-kora-icon-flicker-fix.patch}"
+            patch -p2 -d "$out" < "${./patches/0010-livara-bar-icon-hd-source-size.patch}"
             # Verify content-level markers so a silently-rejected patch fails the check.
             grep -q 'NetworkService\.networkAvailable' "$out/Modules/ControlCenter/Models/WidgetModel.qml" \
               || { echo "check: network-widget patch marker missing" >&2; exit 1; }
@@ -156,6 +162,10 @@
               || { echo "check: kora-icon-flicker patch marker missing in Paths.qml" >&2; exit 1; }
             grep -q 'LIVARA_DMS_ICON_PREWARM' "$out/Services/AppSearchService.qml" \
               || { echo "check: kora-icon-flicker patch marker missing in AppSearchService.qml" >&2; exit 1; }
+            grep -q 'LIVARA_DMS_ICON_HD_SOURCE_SIZE' "$out/Modules/DankBar/Widgets/FocusedApp.qml" \
+              || { echo "check: bar-icon-hd patch marker missing in FocusedApp.qml" >&2; exit 1; }
+            grep -q 'LIVARA_DMS_ICON_HD_SOURCE_SIZE' "$out/Modules/DankBar/Widgets/WorkspaceSwitcher.qml" \
+              || { echo "check: bar-icon-hd patch marker missing in WorkspaceSwitcher.qml" >&2; exit 1; }
           '';
         });
     };

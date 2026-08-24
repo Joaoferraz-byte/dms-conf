@@ -1,0 +1,201 @@
+--- a/quickshell/Modules/DankBar/Widgets/FocusedApp.qml
++++ b/quickshell/Modules/DankBar/Widgets/FocusedApp.qml
+@@ -221,6 +221,8 @@
+                 anchors.centerIn: parent
+                 width: 18
+                 height: 18
++                // LIVARA_DMS_ICON_HD_SOURCE_SIZE
++                backer.sourceSize: Qt.size(36, 36)
+                 visible: root.isVerticalOrientation && activeWindow && status === Image.Ready
+                 source: {
+                     if (!activeWindow || !activeWindow.appId)
+
+--- a/quickshell/Modules/DankBar/Widgets/FocusedApp.qml
++++ b/quickshell/Modules/DankBar/Widgets/FocusedApp.qml
+@@ -275,6 +275,8 @@
+                     id: horizontalAppIcon
+                     width: contentRow.iconSize
+                     height: contentRow.iconSize
++                    // LIVARA_DMS_ICON_HD_SOURCE_SIZE
++                    backer.sourceSize: Qt.size(contentRow.iconSize * 2, contentRow.iconSize * 2)
+                     anchors.verticalCenter: parent.verticalCenter
+                     visible: root.showIcon && activeWindow && status === Image.Ready
+                     source: {
+
+--- a/quickshell/Modules/DankBar/Widgets/FocusedWindowContextMenu.qml
++++ b/quickshell/Modules/DankBar/Widgets/FocusedWindowContextMenu.qml
+@@ -79,6 +79,8 @@
+                     IconImage {
+                         width: 20
+                         height: 20
++                        // LIVARA_DMS_ICON_HD_SOURCE_SIZE
++                        backer.sourceSize: Qt.size(40, 40)
+                         source: Paths.getAppIcon(root.appId, DesktopEntries.heuristicLookup(root.appId))
+                         asynchronous: true
+                         mipmap: true
+
+--- a/quickshell/Modules/DankBar/Widgets/AppsDockContextMenu.qml
++++ b/quickshell/Modules/DankBar/Widgets/AppsDockContextMenu.qml
+@@ -312,6 +312,8 @@
+ 
+                         IconImage {
+                             anchors.fill: parent
++                            // LIVARA_DMS_ICON_HD_SOURCE_SIZE
++                            backer.sourceSize: Qt.size(width * 2, height * 2)
+                             source: modelData.icon ? Paths.resolveIconPath(modelData.icon) : ""
+                             smooth: true
+                             asynchronous: true
+
+--- a/quickshell/Modules/DankBar/Widgets/RunningApps.qml
++++ b/quickshell/Modules/DankBar/Widgets/RunningApps.qml
+@@ -304,6 +304,8 @@
+                             anchors.verticalCenter: parent.verticalCenter
+                             width: Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale)
+                             height: Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale)
++                            // LIVARA_DMS_ICON_HD_SOURCE_SIZE
++                            backer.sourceSize: Qt.size(Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale) * 2, Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale) * 2)
+                             source: {
+                                 root._desktopEntriesUpdateTrigger;
+                                 root._appIdSubstitutionsTrigger;
+@@ -558,6 +560,8 @@
+                             anchors.verticalCenter: parent.verticalCenter
+                             width: Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale)
+                             height: Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale)
++                            // LIVARA_DMS_ICON_HD_SOURCE_SIZE
++                            backer.sourceSize: Qt.size(Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale) * 2, Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale) * 2)
+                             source: {
+                                 root._desktopEntriesUpdateTrigger;
+                                 root._appIdSubstitutionsTrigger;
+
+--- a/quickshell/Modules/DankBar/Widgets/AppsDock.qml
++++ b/quickshell/Modules/DankBar/Widgets/AppsDock.qml
+@@ -689,6 +689,8 @@
+                         anchors.top: (root.isVerticalOrientation && !isCompact) ? parent.top : undefined
+                         anchors.topMargin: (root.isVerticalOrientation && !isCompact) ? Theme.spacingXS : 0
+                         anchors.centerIn: (root.isVerticalOrientation || isCompact) ? parent : undefined
++                        // LIVARA_DMS_ICON_HD_SOURCE_SIZE
++                        backer.sourceSize: Qt.size(appItem.effectiveIconSize * 2, appItem.effectiveIconSize * 2)
+ 
+                         width: appItem.effectiveIconSize
+                         height: appItem.effectiveIconSize
+
+--- a/quickshell/Modules/DankBar/Widgets/SystemTrayBar.qml
++++ b/quickshell/Modules/DankBar/Widgets/SystemTrayBar.qml
+@@ -536,6 +536,8 @@
+                             anchors.centerIn: parent
+                             width: Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale)
+                             height: Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale)
++                            // LIVARA_DMS_ICON_HD_SOURCE_SIZE
++                            backer.sourceSize: Qt.size(Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale) * 2, Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale) * 2)
+                             source: delegateRoot.iconSource
+                             asynchronous: true
+                             smooth: true
+
+--- a/quickshell/Modules/DankBar/Widgets/SystemTrayBar.qml
++++ b/quickshell/Modules/DankBar/Widgets/SystemTrayBar.qml
+@@ -745,6 +745,8 @@
+                     anchors.centerIn: parent
+                     width: Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale)
+                     height: Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale)
++                    // LIVARA_DMS_ICON_HD_SOURCE_SIZE
++                    backer.sourceSize: Qt.size(Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale) * 2, Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale) * 2)
+                     source: iconSource
+                     asynchronous: true
+                     smooth: true
+
+--- a/quickshell/Modules/DankBar/Widgets/SystemTrayBar.qml
++++ b/quickshell/Modules/DankBar/Widgets/SystemTrayBar.qml
+@@ -866,6 +866,8 @@
+                     anchors.centerIn: parent
+                     width: Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale)
+                     height: Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale)
++                    // LIVARA_DMS_ICON_HD_SOURCE_SIZE
++                    backer.sourceSize: Qt.size(Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale) * 2, Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale) * 2)
+                     source: iconSource
+                     asynchronous: true
+                     smooth: true
+
+--- a/quickshell/Modules/DankBar/Widgets/SystemTrayBar.qml
++++ b/quickshell/Modules/DankBar/Widgets/SystemTrayBar.qml
+@@ -1408,6 +1408,8 @@
+                                 anchors.centerIn: parent
+                                 width: Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale)
+                                 height: Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale)
++                                // LIVARA_DMS_ICON_HD_SOURCE_SIZE
++                                backer.sourceSize: Qt.size(Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale) * 2, Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale) * 2)
+                                 source: parent.iconSource
+                                 asynchronous: true
+                                 smooth: true
+
+--- a/quickshell/Modules/DankBar/Widgets/WorkspaceSwitcher.qml
++++ b/quickshell/Modules/DankBar/Widgets/WorkspaceSwitcher.qml
+@@ -1733,6 +1733,8 @@
+                                             IconImage {
+                                                 id: rowAppIcon
+                                                 anchors.fill: parent
++                                                // LIVARA_DMS_ICON_HD_SOURCE_SIZE
++                                                backer.sourceSize: Qt.size(root.appIconSize * 2, root.appIconSize * 2)
+                                                 source: modelData.icon || ""
+                                                 opacity: modelData.active ? 1.0 : rowAppMouseArea.containsMouse ? 0.8 : 0.6
+                                                 visible: !modelData.isQuickshell && !modelData.isSteamApp && status === Image.Ready
+
+--- a/quickshell/Modules/DankBar/Widgets/WorkspaceSwitcher.qml
++++ b/quickshell/Modules/DankBar/Widgets/WorkspaceSwitcher.qml
+@@ -1777,6 +1777,8 @@
+ 
+                                             IconImage {
+                                                 anchors.fill: parent
++                                                // LIVARA_DMS_ICON_HD_SOURCE_SIZE
++                                                backer.sourceSize: Qt.size(root.appIconSize * 2, root.appIconSize * 2)
+                                                 source: modelData.icon
+                                                 opacity: modelData.active ? 1.0 : rowAppMouseArea.containsMouse ? 0.8 : 0.6
+                                                 visible: modelData.isQuickshell
+
+--- a/quickshell/Modules/DankBar/Widgets/WorkspaceSwitcher.qml
++++ b/quickshell/Modules/DankBar/Widgets/WorkspaceSwitcher.qml
+@@ -1793,6 +1793,8 @@
+                                             IconImage {
+                                                 id: rowSteamIcon
+                                                 anchors.fill: parent
++                                                // LIVARA_DMS_ICON_HD_SOURCE_SIZE
++                                                backer.sourceSize: Qt.size(root.appIconSize * 2, root.appIconSize * 2)
+                                                 source: modelData.icon
+                                                 opacity: modelData.active ? 1.0 : rowAppMouseArea.containsMouse ? 0.8 : 0.6
+                                                 visible: modelData.isSteamApp && modelData.icon
+
+--- a/quickshell/Modules/DankBar/Widgets/WorkspaceSwitcher.qml
++++ b/quickshell/Modules/DankBar/Widgets/WorkspaceSwitcher.qml
+@@ -1908,6 +1908,8 @@
+                                             IconImage {
+                                                 id: colAppIcon
+                                                 anchors.fill: parent
++                                                // LIVARA_DMS_ICON_HD_SOURCE_SIZE
++                                                backer.sourceSize: Qt.size(root.appIconSize * 2, root.appIconSize * 2)
+                                                 source: modelData.icon || ""
+                                                 opacity: modelData.active ? 1.0 : colAppMouseArea.containsMouse ? 0.8 : 0.6
+                                                 visible: !modelData.isQuickshell && !modelData.isSteamApp && status === Image.Ready
+
+--- a/quickshell/Modules/DankBar/Widgets/WorkspaceSwitcher.qml
++++ b/quickshell/Modules/DankBar/Widgets/WorkspaceSwitcher.qml
+@@ -1952,6 +1952,8 @@
+ 
+                                             IconImage {
+                                                 anchors.fill: parent
++                                                // LIVARA_DMS_ICON_HD_SOURCE_SIZE
++                                                backer.sourceSize: Qt.size(root.appIconSize * 2, root.appIconSize * 2)
+                                                 source: modelData.icon
+                                                 opacity: modelData.active ? 1.0 : colAppMouseArea.containsMouse ? 0.8 : 0.6
+                                                 visible: modelData.isQuickshell
+
+--- a/quickshell/Modules/DankBar/Widgets/WorkspaceSwitcher.qml
++++ b/quickshell/Modules/DankBar/Widgets/WorkspaceSwitcher.qml
+@@ -1968,6 +1968,8 @@
+                                             IconImage {
+                                                 id: colSteamIcon
+                                                 anchors.fill: parent
++                                                // LIVARA_DMS_ICON_HD_SOURCE_SIZE
++                                                backer.sourceSize: Qt.size(root.appIconSize * 2, root.appIconSize * 2)
+                                                 source: modelData.icon
+                                                 opacity: modelData.active ? 1.0 : colAppMouseArea.containsMouse ? 0.8 : 0.6
+                                                 visible: modelData.isSteamApp && modelData.icon
+
