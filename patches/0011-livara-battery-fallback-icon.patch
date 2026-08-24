@@ -1,0 +1,12 @@
+--- a/quickshell/Services/BatteryService.qml	2026-08-24 22:30:00.000000000 +0000
++++ b/quickshell/Services/BatteryService.qml	2026-08-24 22:30:00.000000000 +0000
+@@ -396,7 +396,7 @@
+     }
+ 
+     function getBatteryIcon() {
+         if (!batteryAvailable) {
+-            return "power";
++            return "battery_std"; // LIVARA_DMS_BATTERY_FALLBACK — avoid duplicate power icon on bar
+         }
+ 
+         if (isCharging) {
