@@ -12,7 +12,7 @@
              width: parent.width * 0.6
              height: 300
              asynchronous: true
-+            active: CalendarService && CalendarService.calendarAvailable // LIVARA_DMS_HIDE_CALENDAR_NO_BACKEND
++            active: SettingsData.calendarBackend !== "none" // LIVARA_DMS_HIDE_CALENDAR_NO_BACKEND
              sourceComponent: Component {
                  CalendarOverviewCard {
                      onCloseDash: root.closeDash()
