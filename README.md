@@ -1,54 +1,42 @@
 # dms-conf
 
-`dms-conf` é a camada opcional de manutenção de patches de primeira camada para o **DankMaterialShell** usado pelo desktop Livara. Ele não substitui a configuração declarativa em `nix-conf` nem os plugins e adapters de `shell-conf`.
+`dms-conf` is the optional first-layer patch maintenance layer for **DankMaterialShell** used by the Livara desktop. It does not replace the declarative configuration in `nix-conf` nor the plugins and adapters of `shell-conf`.
 
-## Contrato arquitetural
+## Architectural contract
 
-A separação de responsabilidades é deliberada:
+The separation of responsibilities is deliberate:
 
-| Camada | Responsabilidade | Alteração típica |
+| Layer | Responsibility | Typical change |
 | --- | --- | --- |
-| `nix-conf` | host, hardware, serviços, capacidades e composição do sistema | `dmsSettings`, widgets por capacidade, units e locks |
-| `shell-conf` | API visual Livara, plugins, adapters e arquivos independentes do host | plugin QML, sincronização de temas e Fastfetch |
-| `dms-conf` | patches pequenos e versionados no código upstream DMS | apenas comportamento ou geometria que a API pública não expõe |
-| upstream DMS | templates, serviços e componentes nativos | fonte de verdade; não editar `/nix/store` |
+| `nix-conf` | host, hardware, services, capabilities, and system composition | `dmsSettings`, per-capability widgets, units, and locks |
+| `shell-conf` | Livara visual API, plugins, adapters, and host-independent files | QML plugin, theme sync, Fastfetch |
+| `dms-conf` | small, versioned patches to upstream DMS code | only behavior or geometry the public API does not expose |
+| upstream DMS | templates, services, and native components | source of truth; do not edit `/nix/store` |
 
-O fluxo futuro será **opt-in**: enquanto não houver um patch aplicado e validado, `nix-conf` continua consumindo diretamente o input DMS v1.5.3. Um repositório vazio não deve ser usado como overlay no flake principal, pois isso criaria uma dependência sem comportamento definido e dificultaria a reprodutibilidade.
+## Pin and patch policy
 
-## Política de pin e patch
+Each patch must be applied on an immutable upstream commit, preferably the commit already pinned by the desktop (`069ddab041c738236a8910e4c39b65d9628d3018`). Version updates must be a separate change, accompanied by a fresh audit of QML contracts, settings names, and the plugin interface.
 
-Cada patch deve ser aplicado sobre um commit upstream imutável, preferencialmente o commit já fixado pelo desktop (`069ddab041c738236a8910e4c39b65d9628d3018`). A atualização de versão deve ser uma mudança separada, acompanhada de nova auditoria dos contratos QML, dos nomes de settings e da interface de plugins.
+The package is derived from `dms.lib.mkDmsShell`. At the pinned commit, upstream compiles Go from the `core` source root and, in `installPhase`, copies QML from the immutable source. dms-conf preserves this copy, makes only the copy in `$out/share/quickshell/dms` writable, and applies patches to that copy within the same `installPhase`; this avoids trying to write to the `/nix/store` source, which caused the observed failure. The dms-conf `homeModule` imports the official module and forces `programs.dank-material-shell.package` to the patched derivation. No DMS file is edited in `/nix/store` and the upstream clone remains only as a comparison source.
 
-A primeira implementação usa esta estrutura:
+Patches must be small, justified, and indicate the affected upstream file. Do not copy the entire DMS into `shell-conf`, duplicate native templates, or edit files materialized in `/nix/store`.
 
-```text
-patches/
-  0001-livara-network-widget-on-ethernet.patch
-  0002-livara-game-mode-power-action.patch
-flake.nix
-README.md
-```
+## Nix integration
 
-O pacote é derivado de `dms.lib.mkDmsShell`. No commit pinado, o upstream compila o Go a partir do source root `core` e, no `installPhase`, copia o QML a partir da fonte imutável. O dms-conf preserva esse copy, torna somente a cópia em `$out/share/quickshell/dms` gravável e aplica os patches nessa cópia dentro do mesmo `installPhase`; isso evita tentar escrever na fonte do `/nix/store`, que causou a falha observada. O `homeModule` do dms-conf importa o módulo oficial e força `programs.dank-material-shell.package` para o derivado patchado. Nenhum arquivo do DMS é editado no `/nix/store` e o clone upstream permanece somente como fonte de comparação.
+Composition in `nix-conf` is explicit: `dmsPackage = inputs.dms-conf.packages.${pkgs.system}.default` and `inputs.dms-conf.homeModules.dank-material-shell` replaces the upstream module in `sharedModules`. The `flake.lock` records the `dms-conf` commit; the internal `dms` input follows the system's already-pinned DMS input, avoiding a second revision.
 
-O patch deve ser pequeno, ter uma justificativa e indicar o arquivo upstream afetado. Não se deve copiar o DMS inteiro para `shell-conf`, duplicar templates nativos, ou editar arquivos materializados em `/nix/store`.
+Integration includes the `patches-apply` check, which copies only the pinned DMS QML tree and confirms that patches apply without rejections. Full desktop builds are left to the host or CI; local validation remains Nix parsing, `git diff --check`, structural patch application, and QML inspection.
 
-## Integração Nix futura
+## Criteria for promoting a change to a patch
 
-A composição em `nix-conf` agora é explícita: `dmsPackage = inputs.dms-conf.packages.${pkgs.system}.default` e `inputs.dms-conf.homeModules.dank-material-shell` substitui o módulo upstream no `sharedModules`. O `flake.lock` registra o commit de `dms-conf`; o input interno `dms` segue o input DMS já pinado do sistema, evitando uma segunda revisão.
+A change belongs in `dms-conf` only if the need is demonstrably first-layer, there is no compatible public setting or plugin, and it can be isolated without assuming host hardware. Likely examples are fixed `WorkspaceSwitcher` geometry and video wallpaper support, but both require proof of need and a complete implementation; GIF or MP4 should not be advertised as supported merely by changing name filters.
 
-A integração inclui o check `patches-apply`, que copia apenas a árvore QML do DMS pinado e confirma que os dois patches aplicam sem rejeições. Builds completos do desktop ficam para o host ou CI; a validação local permanece em parse Nix, `git diff --check`, aplicação estrutural dos patches e inspeção QML.
+Palette changes, application adapters, launcher, fastfetch, AudioRelay, Nautilus, and tablet detection remain outside this layer. They belong respectively to DMS/shell-conf, adapters, nix-conf, or the feature-specific repositories.
 
-## Critérios para promover uma mudança a patch
+## Current state
 
-Uma alteração só pertence a `dms-conf` se a necessidade for comprovadamente de primeira camada, se não houver setting ou plugin público compatível, e se ela puder ser isolada sem assumir hardware do host. Exemplos prováveis são geometria fixa do `WorkspaceSwitcher` e suporte de vídeo no wallpaper, mas ambos exigem prova de necessidade e uma implementação completa; GIF ou MP4 não devem ser anunciados como suportados apenas por alterar filtros de nomes.
+The repository contains two opt-in patches applied by the package: the Network widget is enabled by `NetworkService.networkAvailable`, allowing Ethernet on hosts without Wi-Fi; and the PowerMenu receives a Game/Normal action conditioned on the `LIVARA_DMS_GAME_MODE` and `LIVARA_DMS_GAMEMODE_CONTROL` variables. The second patch does not alter the three native PowerProfiles and does not appear on the Latitude. Application was tested on the real package: `patchPhase`/Go/check pass, `installPhase` copies QML, applies both patches, and `fixupPhase` completes without error.
 
-Mudanças de paleta, adapters de aplicações, launcher, fastfetch, AudioRelay, Nautilus e detecção de mesa permanecem fora desta camada. Elas pertencem respectivamente a DMS/shell-conf, adapters, nix-conf ou aos repositórios específicos do recurso.
+The Game button is implemented as a GameMode request maintained by a user service. The backend in `nix-conf` uses `gamemoded -r`, reads state via `systemctl --user is-active`, and releases the request with `SIGINT`; GameMode remains semantically separate from `power-profiles-daemon`.
 
-## Estado atual
-
-O repositório contém agora dois patches opt-in aplicados pelo pacote: o widget Network passa a ser habilitado por `NetworkService.networkAvailable`, permitindo Ethernet no host sem Wi-Fi; e o PowerMenu recebe uma ação Game/Normal condicionada às variáveis `LIVARA_DMS_GAME_MODE` e `LIVARA_DMS_GAMEMODE_CONTROL`. O segundo patch não altera os três perfis nativos do PowerProfiles e não aparece no Latitude. A aplicação foi testada no pacote real: `patchPhase`/Go/check passam, o `installPhase` copia o QML, aplica os dois patches e o `fixupPhase` conclui sem erro.
-
-O botão Game é implementado como request de GameMode mantido por um serviço de usuário do myMachine. O backend em `nix-conf` usa `gamemoded -r`, lê estado via `systemctl --user is-active` e libera a requisição com `SIGINT`; GameMode permanece semanticamente separado de `power-profiles-daemon`.
-
-Nautilus, Fastfetch/Roxy, AudioRelay, Matugen/adapters e detecção da mesa continuam fora do dms-conf. Em particular, GIO metadata já corrige o ícone da pasta no conteúdo do Nautilus, mas a sidebar de bookmarks usa ícones simbólicos conforme o contrato upstream; um patch de bookmark deve nascer no repositório do Nautilus, não ser escondido dentro do DMS.
+Nautilus, Fastfetch/Roxy, AudioRelay, Matugen/adapters, and tablet detection remain outside dms-conf. In particular, GIO metadata already fixes the folder icon in Nautilus content view, but the bookmarks sidebar uses symbolic icons per the upstream contract; a bookmark patch should originate in the Nautilus repository, not be hidden inside DMS.
