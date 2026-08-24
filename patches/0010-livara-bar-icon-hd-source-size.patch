@@ -22,18 +22,6 @@
                      visible: root.showIcon && activeWindow && status === Image.Ready
                      source: {
 
---- a/quickshell/Modules/DankBar/Widgets/FocusedWindowContextMenu.qml
-+++ b/quickshell/Modules/DankBar/Widgets/FocusedWindowContextMenu.qml
-@@ -79,6 +79,8 @@
-                     IconImage {
-                         width: 20
-                         height: 20
-+                        // LIVARA_DMS_ICON_HD_SOURCE_SIZE
-+                        backer.sourceSize: Qt.size(40, 40)
-                         source: Paths.getAppIcon(root.appId, DesktopEntries.heuristicLookup(root.appId))
-                         asynchronous: true
-                         mipmap: true
-
 --- a/quickshell/Modules/DankBar/Widgets/AppsDockContextMenu.qml
 +++ b/quickshell/Modules/DankBar/Widgets/AppsDockContextMenu.qml
 @@ -312,6 +312,8 @@
