@@ -67,6 +67,7 @@
                 patch -p2 -d "$out/share/quickshell/dms" < "${./patches/0009-livara-kora-icon-flicker-fix.patch}"
                 patch -p2 -d "$out/share/quickshell/dms" < "${./patches/0010-livara-bar-icon-hd-source-size.patch}"
                 patch -p2 -d "$out/share/quickshell/dms" < "${./patches/0011-livara-battery-fallback-icon.patch}"
+                patch -p2 -d "$out/share/quickshell/dms" < "${./patches/0012-livara-focused-app-name-only.patch}"
                 # Verify patches landed: each patch introduces a unique marker
                 # string that must be present in the installed QML after patching.
                 grep -q 'NetworkService\.networkAvailable' "$out/share/quickshell/dms/Modules/ControlCenter/Models/WidgetModel.qml" \
@@ -99,6 +100,8 @@
                   || { echo "dms-conf: bar-icon-hd patch marker missing in WorkspaceSwitcher.qml" >&2; exit 1; }
                 grep -q 'LIVARA_DMS_BATTERY_FALLBACK' "$out/share/quickshell/dms/Services/BatteryService.qml" \
                   || { echo "dms-conf: battery-fallback patch marker missing in BatteryService.qml" >&2; exit 1; }
+                grep -q 'LIVARA_DMS_FOCUSED_APP_NAME_ONLY' "$out/share/quickshell/dms/Modules/DankBar/Widgets/FocusedApp.qml" \
+                  || { echo "dms-conf: focused-app-name-only patch marker missing in FocusedApp.qml" >&2; exit 1; }
               '';
             in
             nixpkgs.lib.replaceStrings [ copyLine ] [ writableCopy ] original + patchCommands;
@@ -141,6 +144,7 @@
             patch -p2 -d "$out" < "${./patches/0009-livara-kora-icon-flicker-fix.patch}"
             patch -p2 -d "$out" < "${./patches/0010-livara-bar-icon-hd-source-size.patch}"
             patch -p2 -d "$out" < "${./patches/0011-livara-battery-fallback-icon.patch}"
+            patch -p2 -d "$out" < "${./patches/0012-livara-focused-app-name-only.patch}"
             # Verify content-level markers so a silently-rejected patch fails the check.
             grep -q 'NetworkService\.networkAvailable' "$out/Modules/ControlCenter/Models/WidgetModel.qml" \
               || { echo "check: network-widget patch marker missing" >&2; exit 1; }
@@ -172,6 +176,8 @@
               || { echo "check: bar-icon-hd patch marker missing in WorkspaceSwitcher.qml" >&2; exit 1; }
             grep -q 'LIVARA_DMS_BATTERY_FALLBACK' "$out/Services/BatteryService.qml" \
               || { echo "check: battery-fallback patch marker missing in BatteryService.qml" >&2; exit 1; }
+            grep -q 'LIVARA_DMS_FOCUSED_APP_NAME_ONLY' "$out/Modules/DankBar/Widgets/FocusedApp.qml" \
+              || { echo "check: focused-app-name-only patch marker missing in FocusedApp.qml" >&2; exit 1; }
           '';
         });
     };
