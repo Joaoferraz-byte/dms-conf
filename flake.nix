@@ -32,8 +32,8 @@
             else ''end = ["media", "bar", "notifications", "session"]'';
           rawSettings = builtins.readFile (self + "/config/noctalia/config.toml");
           settings = pkgs.writeText "noctalia-config.toml" (lib.replaceStrings
-            [ "@NOCTALIA_PALETTE_TEMPLATE@" "@NOCTALIA_NVIM_TEMPLATE@" "@NOCTALIA_FIREFOX_TEMPLATE@" "@NOCTALIA_ZEN_TEMPLATE@" "end = [\"media\", \"bar\", \"notifications\", \"session\"]" ]
-            [ "${self}/config/noctalia/templates/livara-palette.json" "${self}/config/noctalia/templates/nvim-base16.lua" "${self}/config/noctalia/templates/firefox.css" "${self}/config/noctalia/templates/zen-userchrome.css" barEnd ]
+            [ "@NOCTALIA_PALETTE_TEMPLATE@" "@NOCTALIA_NVIM_TEMPLATE@" "@NOCTALIA_FIREFOX_TEMPLATE@" "@NOCTALIA_ZEN_TEMPLATE@" "@NOCTALIA_LAMBDA_ICON@" "end = [\"media\", \"bar\", \"notifications\", \"session\"]" ]
+            [ "${self}/config/noctalia/templates/livara-palette.json" "${self}/config/noctalia/templates/nvim-base16.lua" "${self}/config/noctalia/templates/firefox.css" "${self}/config/noctalia/templates/zen-userchrome.css" "${self}/assets/lambda-thick.svg" barEnd ]
             rawSettings);
         in
         {
@@ -73,6 +73,7 @@
               -e 's|@NOCTALIA_NVIM_TEMPLATE@|${self}/config/noctalia/templates/nvim-base16.lua|g' \
               -e 's|@NOCTALIA_FIREFOX_TEMPLATE@|${self}/config/noctalia/templates/firefox.css|g' \
               -e 's|@NOCTALIA_ZEN_TEMPLATE@|${self}/config/noctalia/templates/zen-userchrome.css|g' \
+              -e 's|@NOCTALIA_LAMBDA_ICON@|${self}/assets/lambda-thick.svg|g' \
               ${self}/config/noctalia/config.toml > config.toml
             noctalia config validate config.toml
             touch "$out"
