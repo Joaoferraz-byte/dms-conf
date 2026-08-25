@@ -21,12 +21,19 @@
       forEachSystem = nixpkgs.lib.genAttrs systems;
     in
     {
-      homeModules.noctalia = { config, lib, pkgs, ... }:
+      homeModules.noctalia = { config, lib, pkgs, desktopProfile ? {}, ... }:
         let
+          # The shared TOML remains valid and readable in the repository. The
+          # host-specific bar policy is materialized here from the same
+          # desktopProfile contract used by the NixOS host modules.
+          batteryOnBar = (desktopProfile.monitorProfile or null) == "latitude";
+          barEnd = if batteryOnBar
+            then ''end = ["media", "bar", "notifications", "battery", "session"]''
+            else ''end = ["media", "bar", "notifications", "session"]'';
           rawSettings = builtins.readFile (self + "/config/noctalia/config.toml");
           settings = pkgs.writeText "noctalia-config.toml" (lib.replaceStrings
-            [ "@NOCTALIA_PALETTE_TEMPLATE@" "@NOCTALIA_NVIM_TEMPLATE@" "@NOCTALIA_FIREFOX_TEMPLATE@" "@NOCTALIA_ZEN_TEMPLATE@" ]
-            [ "${self}/config/noctalia/templates/livara-palette.json" "${self}/config/noctalia/templates/nvim-base16.lua" "${self}/config/noctalia/templates/firefox.css" "${self}/config/noctalia/templates/zen-userchrome.css" ]
+            [ "@NOCTALIA_PALETTE_TEMPLATE@" "@NOCTALIA_NVIM_TEMPLATE@" "@NOCTALIA_FIREFOX_TEMPLATE@" "@NOCTALIA_ZEN_TEMPLATE@" "end = [\"media\", \"bar\", \"notifications\", \"session\"]" ]
+            [ "${self}/config/noctalia/templates/livara-palette.json" "${self}/config/noctalia/templates/nvim-base16.lua" "${self}/config/noctalia/templates/firefox.css" "${self}/config/noctalia/templates/zen-userchrome.css" barEnd ]
             rawSettings);
         in
         {

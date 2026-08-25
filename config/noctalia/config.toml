@@ -232,7 +232,8 @@ radius = 80
 widget_spacing = 10
 start = ["control-center", "workspaces", "sysmon"]
 center = ["cat", "clock"]
-end = ["media", "bar", "notifications", "battery", "session"]
+# Battery is inserted by the host-specific Home Manager adapter on latitude.
+end = ["media", "bar", "notifications", "session"]
 
 [widget.bar]
 type = "noctalia/timer:bar"
