@@ -11,7 +11,7 @@
 +            x: SettingsData.calendarBackend !== "none" ? parent.width * 0.8 : parent.width * 0.2 - Theme.spacingM
              y: 100 + Theme.spacingM
 -            width: parent.width * 0.2
-+            width: SettingsData.calendarBackend !== "none" ? parent.width * 0.2 : parent.width * 0.8
++            width: SettingsData.calendarBackend !== "none" ? parent.width * 0.2 : parent.width * 0.8 + Theme.spacingM
              height: 300
  
              onClicked: root.switchToMediaTab()

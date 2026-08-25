@@ -40,7 +40,7 @@
      property bool smoothTransform: false
  
      implicitWidth: Math.round(size)
-@@ -18,17 +36,274 @@
+@@ -18,17 +36,276 @@
  
      signal rotationCompleted
  
@@ -72,7 +72,7 @@
 +        "battery_1_bar": "\uea2f", // battery-1
 +        "battery_2_bar": "\uea30", // battery-2
 +        "battery_3_bar": "\uea31", // battery-3
-+        "battery_4_bar": "\uea31", // battery-3
++        "battery_4_bar": "\uea32", // battery-4
 +        "battery_5_bar": "\uea32", // battery-4
 +        "battery_6_bar": "\uea32", // battery-4
 +        "battery_alert": "\uea2f", // battery-1
@@ -83,7 +83,7 @@
 +        "battery_charging_80": "\uea33", // battery-charging
 +        "battery_charging_90": "\uea33", // battery-charging
 +        "battery_charging_full": "\uea33", // battery-charging
-+        "battery_full": "\uea32", // battery-4
++        "battery_full": "\uea34", // battery (full)
 +        "battery_horiz_075": "\uea31", // battery-3
 +        "battery_std": "\uea34", // battery
 +        "bedtime": "\ueaf8", // moon
@@ -152,6 +152,8 @@
 +        "fullscreen": "\uea28", // arrows-maximize
 +        "grid_on": "\ueaba", // grid-dots
 +        "grid_view": "\uedba", // layout-grid
++        "view_list": "\ueb6b", // list — launcher list view mode
++        "view_module": "\uead4", // layout-columns — launcher tile view mode
 +        "headset": "\ueabd", // headphones
 +        "hidden": "\uecf0", // eye-off
 +        "hidden_horizontal": "\ueb59", // arrows-horizontal
@@ -318,7 +320,7 @@
          font.pixelSize: Math.round(Theme.fontSizeMedium)
          font.weight: root.weight
          font.hintingPreference: Font.PreferNoHinting
-@@ -36,29 +309,10 @@
+@@ -36,29 +311,10 @@
          verticalAlignment: Text.AlignVCenter
          horizontalAlignment: Text.AlignHCenter
          renderType: root.smoothTransform ? Text.QtRendering : Text.NativeRendering
