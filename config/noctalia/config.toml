@@ -245,6 +245,8 @@ cat_size = 32
 cat_color_mode = "theme"
 
 [widget.battery]
+type = "battery"
+device = "BAT0"
 display_mode = "graphic"
 show_label = false
 
