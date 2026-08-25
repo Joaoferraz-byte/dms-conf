@@ -1,6 +1,6 @@
 # Noctalia configuration for Livara
 
-This repository is the reproducible first-layer integration for **Noctalia v5** in the Livara NixOS environment. It replaces the former DMS patch layer. The repository contains a curated Noctalia TOML, a small set of reviewed v5 plugins, and the Home Manager module that installs them as store-backed files.
+This repository is the reproducible first-layer integration for **Noctalia v5** in the Livara NixOS environment. It contains a curated Noctalia TOML, a small set of reviewed v5 plugins, and the Home Manager module that installs them as store-backed files.
 
 ## Ownership model
 
@@ -41,7 +41,7 @@ home-manager.sharedModules = [
 ];
 ```
 
-During the repository rename transition, the old `github:Joaoferraz-byte/dms-conf` URL may continue to resolve through GitHub's redirect. The source tree itself contains no DMS package, patch, IPC call or module.
+The canonical repository URL is `github:Joaoferraz-byte/noctalia-conf`; its source tree contains only Noctalia configuration, reviewed plugins and the Home Manager integration.
 
 ## Validation
 
