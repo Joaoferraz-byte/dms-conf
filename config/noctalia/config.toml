@@ -22,10 +22,6 @@ ui_scale = 0.8
 [shell.launcher]
 categories = false
 
-[widget.launcher]
-glyph = "lambda"
-color = "primary"
-
 [shell.launcher.providers.calculator]
 prefix = "="
 
@@ -230,6 +226,9 @@ reserve_space = true
 layer = "top"
 thickness = 33
 background_opacity = 0.88
+# Keep attached panels visually continuous with the bar on fractional-scale outputs.
+contact_shadow = false
+panel_overlap = 1
 margin_ends = 215
 padding = 15
 radius = 80
@@ -260,7 +259,7 @@ format = "{:%H:%M|%a,%b%d}"
 [widget.control-center]
 color = "primary"
 custom_image_colorize = true
-glyph = "navigation-filled"
+glyph = "lambda"
 icon_color = "primary"
 scale = 1.1
 
