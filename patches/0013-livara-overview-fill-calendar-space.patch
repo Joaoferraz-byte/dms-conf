@@ -1,0 +1,17 @@
+--- a/quickshell/Modules/DankDash/OverviewTab.qml	2026-08-25 00:00:00.000000000 +0000
++++ b/quickshell/Modules/DankDash/OverviewTab.qml	2026-08-25 00:00:00.000000000 +0000
+@@ -84,8 +84,12 @@
+         // Media - bottom right (narrow and taller)
+         MediaOverviewCard {
+-            x: parent.width * 0.8
++            // LIVARA_DMS_OVERVIEW_FILL_CALENDAR_SPACE — when no calendar
++            // backend is configured the calendar Loader is inactive (patch
++            // 0007), leaving the central overview area empty. Expand the
++            // media card leftward into that space so the middle is populated.
++            x: SettingsData.calendarBackend !== "none" ? parent.width * 0.8 : parent.width * 0.2 - Theme.spacingM
+             y: 100 + Theme.spacingM
+-            width: parent.width * 0.2
++            width: SettingsData.calendarBackend !== "none" ? parent.width * 0.2 : parent.width * 0.8
+             height: 300
+ 
+             onClicked: root.switchToMediaTab()

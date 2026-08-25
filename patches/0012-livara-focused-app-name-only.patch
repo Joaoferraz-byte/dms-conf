@@ -1,14 +1,23 @@
 --- a/quickshell/Modules/DankBar/Widgets/FocusedApp.qml	2026-08-24 22:35:00.000000000 +0000
 +++ b/quickshell/Modules/DankBar/Widgets/FocusedApp.qml	2026-08-24 22:35:00.000000000 +0000
-@@ -304,6 +304,12 @@
+@@ -304,6 +304,21 @@
                  StyledText {
                      id: titleText
                      text: {
-+                        // LIVARA_DMS_FOCUSED_APP_NAME_ONLY — in non-compact mode
-+                        // show only the app name (appText) and hide the window
-+                        // title + separator, keeping the bar clean and readable.
-+                        if (!compactMode)
-+                            return "";
++                        // LIVARA_DMS_FOCUSED_APP_NAME_ONLY — show only the
++                        // application name (e.g. "Firefox"), never the window
++                        // title, in both compact and non-compact bar modes.
++                        // In compact mode appText.text is empty (the app name
++                        // pill is hidden), so resolve the name here via
++                        // Paths.getAppName. In non-compact mode the name is
++                        // already shown by appText, so this returns "" to keep
++                        // the bar clean and avoid the window title + separator.
++                        if (compactMode) {
++                            if (!activeWindow || !activeWindow.appId)
++                                return "";
++                            return Paths.getAppName(activeWindow.appId, activeDesktopEntry);
++                        }
++                        return "";
 +
                          const title = activeWindow && activeWindow.title ? activeWindow.title : "";
                          const appName = appText.text;
