@@ -225,7 +225,7 @@ auto_hide = false
 reserve_space = true
 layer = "top"
 thickness = 33
-background_opacity = 1.0
+background_opacity = 0.88
 margin_ends = 215
 padding = 15
 radius = 80
@@ -276,6 +276,6 @@ show_labels = false
 label_source = "id"
 
 [hooks]
-# Noctalia owns the palette and writes the adapter input atomically. The
-# command is optional; no external shell bridge or cache is involved.
-colors_changed = "~/.local/bin/sync-livara-themes dark"
+# Noctalia owns the palette and updates both compositor and application
+# adapters from the same generated JSON palette.
+colors_changed = "test -x ~/.local/bin/sync-noctalia-niri-colors && ~/.local/bin/sync-noctalia-niri-colors; ~/.local/bin/sync-livara-themes dark"
