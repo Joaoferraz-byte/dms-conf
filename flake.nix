@@ -34,7 +34,6 @@
 
           programs.noctalia = {
             enable = true;
-            package = lib.mkDefault noctalia.packages.${pkgs.system}.default;
             # Niri starts Noctalia once through spawn-at-startup. Enabling the
             # upstream service as well would create two shell processes.
             systemd.enable = false;
