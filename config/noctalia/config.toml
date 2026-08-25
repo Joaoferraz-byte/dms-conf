@@ -1,0 +1,252 @@
+# Noctalia v5 configuration owned by noctalia-conf.
+# This file contains stable user intent only. GUI state, plugin caches and
+# monitor-specific widget geometry stay in $XDG_STATE_HOME/noctalia/.
+
+[plugins]
+enabled = ["dotnetrob/cat", "noctalia/timer", "noctalia/screen_recorder"]
+auto_update = "none"
+
+[shell]
+avatar_path = "~/Pictures/Pfps-and-logos/icon.png"
+font_family = "JetBrains Mono"
+niri_overview_type_to_launch_enabled = true
+password_style = "random"
+polkit_agent = true
+screen_time_enabled = true
+show_location = false
+ui_scale = 0.8
+
+[shell.launcher]
+categories = false
+
+[shell.launcher.providers.calculator]
+prefix = "="
+
+[shell.panel]
+clipboard_placement = "attached"
+clipboard_position = "auto"
+launcher_placement = "attached"
+open_near_click_clipboard = true
+open_near_click_control_center = true
+open_near_click_launcher = true
+open_near_click_wallpaper = true
+polkit_placement = "attached"
+polkit_position = "auto"
+transparency_mode = "soft"
+
+[shell.screen_corners]
+enabled = true
+
+[shell.session]
+grid = true
+grid_columns = 4
+
+[[shell.session.actions]]
+action = "lock"
+countdown_seconds = 0.0
+enabled = true
+shortcut = "1"
+variant = "default"
+
+[[shell.session.actions]]
+action = "logout"
+countdown_seconds = 0.0
+enabled = true
+shortcut = "2"
+variant = "default"
+
+[[shell.session.actions]]
+action = "lock_and_suspend"
+countdown_seconds = 0.0
+enabled = false
+shortcut = "3"
+variant = "default"
+
+[[shell.session.actions]]
+action = "reboot"
+countdown_seconds = 0.0
+enabled = true
+shortcut = "4"
+variant = "default"
+
+[[shell.session.actions]]
+action = "shutdown"
+countdown_seconds = 0.0
+enabled = true
+shortcut = "5"
+variant = "destructive"
+
+[shell.shadow]
+alpha = 0.88
+direction = "center"
+
+[theme]
+builtin = "Noctalia"
+mode = "dark"
+source = "wallpaper"
+wallpaper_scheme = "m3-content"
+
+[theme.templates]
+enable_builtin_templates = true
+# Do not enable the built-in niri template: it mutates config.kdl by appending
+# an include. Nix owns the compositor configuration as a single source.
+builtin_ids = ["gtk3", "gtk4", "kcolorscheme", "kitty", "qt", "starship", "wezterm"]
+enable_community_templates = false
+community_ids = []
+
+[theme.templates.user.livara_palette]
+input_path = "@NOCTALIA_PALETTE_TEMPLATE@"
+output_path = [
+  "$XDG_STATE_HOME/livara/theme/palette.dark.json",
+  "$XDG_STATE_HOME/livara/theme/palette.json",
+  "$XDG_STATE_HOME/livara/theme/palette.light.json",
+]
+
+[theme.templates.user.nvim_base16]
+input_path = "@NOCTALIA_NVIM_TEMPLATE@"
+output_path = "$XDG_CONFIG_HOME/nvim/lua/matugen_colors.lua"
+post_hook = "pkill -SIGUSR1 nvim || true"
+
+[theme.templates.user.firefox]
+input_path = "@NOCTALIA_FIREFOX_TEMPLATE@"
+output_path = "$XDG_STATE_HOME/livara/theme/browser/firefox.css"
+
+[theme.templates.user.zen_browser]
+input_path = "@NOCTALIA_ZEN_TEMPLATE@"
+output_path = "$XDG_STATE_HOME/livara/theme/browser/zen.css"
+
+[wallpaper]
+enabled = true
+fill_mode = "crop"
+transition = ["disc", "honeycomb", "stripes", "wipe", "zoom"]
+transition_duration = 1500
+transition_on_startup = true
+directory = "~/Wallpapers"
+
+[wallpaper.default]
+path = "~/Wallpapers/noctara-wall.png"
+
+[wallpaper.automation]
+enabled = true
+
+[lockscreen]
+enabled = true
+blurred_desktop = false
+blur_intensity = 0.5
+tint_intensity = 0.3
+
+[system.monitor]
+enabled = true
+cpu_poll_seconds = 2.0
+gpu_poll_seconds = 5.0
+memory_poll_seconds = 2.0
+network_poll_seconds = 3.0
+disk_poll_seconds = 10.0
+
+[calendar]
+enabled = false
+
+[weather]
+enabled = true
+refresh_minutes = 30
+unit = "celsius"
+effects = true
+
+[location]
+auto_locate = false
+address = "Jardim João XXIII, São Paulo, SP, Brasil"
+
+[control_center]
+hidden_tabs = ["monitor"]
+sidebar_section = "none"
+
+[[control_center.shortcuts]]
+type = "wifi"
+
+[[control_center.shortcuts]]
+type = "bluetooth"
+
+[[control_center.shortcuts]]
+type = "caffeine"
+
+[[control_center.shortcuts]]
+type = "dark_mode"
+
+[audio]
+enable_sounds = true
+sound_volume = 1.0
+
+[notification]
+layer = "overlay"
+
+[osd]
+orientation = "vertical"
+position = "top_right"
+position_vertical = "top_right"
+
+[osd.kinds]
+media = false
+
+[bar]
+order = ["default"]
+
+[bar.default]
+position = "top"
+enabled = true
+auto_hide = false
+reserve_space = true
+layer = "top"
+thickness = 33
+background_opacity = 1.0
+margin_ends = 215
+padding = 15
+radius = 80
+widget_spacing = 10
+start = ["control-center", "workspaces", "sysmon"]
+center = ["cat", "clock"]
+end = ["media", "bar", "notifications", "battery", "session"]
+
+[widget.bar]
+type = "noctalia/timer:bar"
+show_idle_on_horizontal = false
+
+[widget.cat]
+type = "dotnetrob/cat:cat"
+cat_size = 32
+cat_color_mode = "theme"
+
+[widget.battery]
+display_mode = "graphic"
+show_label = false
+
+[widget.clock]
+format = "{:%H:%M|%a,%b%d}"
+
+[widget.control-center]
+color = "primary"
+custom_image_colorize = true
+glyph = "navigation-filled"
+icon_color = "primary"
+scale = 1.1
+
+[widget.media]
+art_size = 42
+hide_when_no_media = true
+max_length = 149
+min_length = 198
+title_scroll = "on_hover"
+
+[widget.session]
+color = "#FF000C"
+glyph = "power"
+
+[widget.sysmon]
+stat = "cpu_temp"
+
+[widget.workspaces]
+display = "none"
+
+[hooks]
+# Noctalia owns the palette and writes the adapter input atomically. The
+# command is optional; no DMS bridge or DMS cache is involved.
+colors_changed = "~/.local/bin/sync-livara-themes dark"
