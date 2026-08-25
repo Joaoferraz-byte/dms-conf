@@ -54,7 +54,7 @@
  
 +    // --- Material Symbols name -> Tabler Icons codepoint map ---
 +    readonly property var _tablerMap: ({
-+        "account_circle": "\uf68", // user-circle
++        "account_circle": "\uef68", // user-circle
 +        "add": "\ueb0b", // plus
 +        "add_circle": "\uea69", // circle-plus
 +        "air": "\uec34", // wind
