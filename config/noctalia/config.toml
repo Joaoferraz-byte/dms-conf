@@ -97,6 +97,28 @@ builtin_ids = ["gtk3", "gtk4", "kcolorscheme", "kitty", "qt", "starship", "wezte
 enable_community_templates = false
 community_ids = []
 
+[theme.templates.user.discord_material_vesktop]
+input_path = "@NOCTALIA_DISCORD_TEMPLATE@"
+output_path = "$XDG_CONFIG_HOME/vesktop/themes/noctalia-material.theme.css"
+
+[theme.templates.user.tauon]
+input_path = "@NOCTALIA_TAUON_TEMPLATE@"
+output_path = "$XDG_DATA_HOME/TauonMusicBox/theme/Noctalia.ttheme"
+
+[theme.templates.user.heroiclauncher]
+input_path = "@NOCTALIA_HEROIC_TEMPLATE@"
+output_path = "$XDG_CONFIG_HOME/heroic/themes/matugen.css"
+requires_path = "~/.config/heroic"
+
+[theme.templates.user.heroiclauncher_flatpak]
+input_path = "@NOCTALIA_HEROIC_TEMPLATE@"
+output_path = "~/.var/app/com.heroicgameslauncher.hgl/config/heroic/themes/matugen.css"
+requires_path = "~/.var/app/com.heroicgameslauncher.hgl"
+
+[theme.templates.user.prismlauncher]
+input_path = "@NOCTALIA_PRISM_TEMPLATE@"
+output_path = "$XDG_DATA_HOME/PrismLauncher/themes/Matugen/theme.json"
+
 [theme.templates.user.livara_palette]
 input_path = "@NOCTALIA_PALETTE_TEMPLATE@"
 output_path = [
@@ -236,7 +258,7 @@ widget_spacing = 10
 start = ["control-center", "workspaces", "sysmon"]
 center = ["cat", "clock"]
 # Battery is inserted by the host-specific Home Manager adapter on latitude.
-end = ["media", "bar", "notifications", "session"]
+end = ["media", "bar", "recorder", "notifications", "session"]
 
 [widget.bar]
 type = "noctalia/timer:bar"

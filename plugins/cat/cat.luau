@@ -122,5 +122,8 @@ render()
 refreshTabletStatus()
 
 function onClick()
+  if not tabletConnected then
+    return
+  end
   noctalia.togglePanel("dotnetrob/cat:panel")
 end
