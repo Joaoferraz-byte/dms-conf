@@ -8,7 +8,7 @@ An animated tablet-aware cat in the Noctalia bar. It sleeps when the MTM-1106/T5
 | --- | --- |
 | ID | `dotnetrob/cat` |
 | Entries | Bar widget: `cat`; panel: `panel` |
-| Panel | Floating, centered, 360×390 logical pixels |
+| Panel | Floating, centered, 380×430 logical pixels, `surface/0.88` background |
 
 ## Usage
 
@@ -36,4 +36,6 @@ The **New Xournal++ Note** action reuses `livara-xournal-new-note`. It opens tod
 
 ## Asset provenance
 
-The original `kurukuru.gif` is preserved unchanged. Its source and the deterministic frame extraction are documented in [`ASSET-SOURCE.md`](ASSET-SOURCE.md). The bar itself continues to use the reviewed `catwalk2.otf` glyph animation so tablet presence remains theme-aware and lightweight.
+The original `kurukuru.gif` is preserved unchanged. Its source and deterministic frame extraction are documented in [`ASSET-SOURCE.md`](ASSET-SOURCE.md). The panel uses a translucent `surface/0.88` fill, matching the bar's configured `background_opacity = 0.88`; transparency outside the character comes from the GIF alpha channel, while opaque black outlines are part of the artwork. The bar itself continues to use the reviewed `catwalk2.otf` glyph animation so tablet presence remains theme-aware and lightweight.
+
+To remove the stale second bar, close Noctalia and run `~/.local/bin/repair-noctalia-stale-bars`. If Noctalia is still running, use the explicit opt-in `~/.local/bin/repair-noctalia-stale-bars --stop`; it sends SIGTERM only to exact Noctalia processes, waits for exit, performs the backup-first edit and tells you to reopen Noctalia with `noctalia`.

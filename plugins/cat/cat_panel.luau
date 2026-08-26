@@ -5,8 +5,8 @@
 
 local FRAME_COUNT = 6
 local FRAME_MS = 60
-local IMAGE_WIDTH = 300
-local IMAGE_HEIGHT = 253
+local IMAGE_WIDTH = 320
+local IMAGE_HEIGHT = 270
 
 local frameIndex = 0
 local frameElapsed = 0
@@ -18,7 +18,7 @@ end
 
 local function render()
   panel.render(ui.column({
-    fill = "surface/0.96",
+    fill = "surface/0.88",
     radius = 20,
     border = "outline_variant",
     borderWidth = 1,
@@ -46,7 +46,7 @@ local function render()
       glyph = "note",
       variant = "primary",
       controlSize = "md",
-      width = 300,
+      width = 320,
       tooltip = "Open today's Xournal++ journal note",
       onClick = "onNewNote",
     }),

@@ -1,6 +1,6 @@
 id           = "dotnetrob/cat"
 name         = "Cat"
-version      = "1.4.0"
+version      = "1.4.1"
 plugin_api   = 18
 author       = "DotNetRob"
 license      = "MIT"
@@ -15,8 +15,8 @@ tags         = ["bar", "animation", "system", "fun"]
 [[panel]]
 id              = "panel"
 entry           = "cat_panel.luau"
-width           = 360
-height          = 390
+width           = 380
+height          = 430
 placement       = "floating"
 position        = "center"
 open_near_click = false
