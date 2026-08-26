@@ -9,17 +9,13 @@ icon         = "paw"
 description  = "An animated cat that sleeps without the tablet and walks while it is connected."
 tags         = ["bar", "animation", "system", "fun"]
 
-# Popup opened by clicking the bar widget: the kurukuru animation is centered
-# above the Xournal++ note action. A floating center panel avoids tying the
-# visual popup to the bar edge while the host default dismisses outside clicks.
 [[panel]]
 id              = "panel"
 entry           = "cat_panel.luau"
-width           = 380
-height          = 430
-placement       = "floating"
-position        = "center"
-open_near_click = false
+width           = 360
+height          = 380
+placement       = "attached"
+open_near_click = true
 
 [[widget]]
 id    = "cat"

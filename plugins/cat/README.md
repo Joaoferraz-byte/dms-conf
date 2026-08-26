@@ -1,41 +1,45 @@
 # Cat
 
-An animated tablet-aware cat in the Noctalia bar. It sleeps when the MTM-1106/T501 tablet is disconnected and walks at a normal pace while the tablet is connected, with the bar glyph colored by the active theme.
+Widget Cat sensível à mesa digitalizadora para o Noctalia. Ele dorme quando a MTM-1106/T501 está desconectada e caminha quando a mesa está conectada.
 
 ## Plugin
 
-| Field | Value |
+| Campo | Valor |
 | --- | --- |
 | ID | `dotnetrob/cat` |
-| Entries | Bar widget: `cat`; panel: `panel` |
-| Panel | Floating, centered, 380×430 logical pixels, `surface/0.88` background |
+| Entradas | widget de barra `cat`; panel `panel` |
+| Panel | attached, 360×380 pixels lógicos, aberto próximo ao clique |
 
-## Usage
+## Uso
 
-Add the `Cat` widget to a bar from **Settings → Bar → Add Widget**. Clicking the widget toggles a centered popup. The popup shows the preserved `kurukuru.gif` animation above a footer button named **New Xournal++ Note**. The panel uses six deterministic PNG frames because Noctalia v5's `ui.image` control presents one texture rather than advancing GIF frames itself.
+Adicione o widget **Cat** em **Settings → Bar → Add Widget**. Clique nele para abrir o panel attached, que usa a surface nativa do Noctalia. A animação `kurukuru.gif` aparece acima do botão **New Xournal++ Note**; seis frames PNG são usados porque `ui.image` apresenta uma textura por vez.
 
-Clicking outside the popup dismisses it. The panel can also be toggled over IPC:
+O panel também pode ser aberto por IPC:
 
 ```sh
 noctalia msg panel-toggle dotnetrob/cat:panel
 ```
 
-## Settings
+Clique fora do panel para fechá-lo.
 
-| Setting | Type | Default | Description |
+## Configurações
+
+| Configuração | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
-| `cat_size` | `int` | `24` | Sprite size in the bar, in pixels (12–48). |
-| `cat_color_mode` | `select` | `theme` | `theme` colors the bar cat with the palette's `secondary` role and tracks theme changes; `custom` uses the color below. |
-| `cat_color` | `color` | `#E8A24C` | Used when `cat_color_mode` is `custom`. |
+| `cat_size` | `int` | `24` | Tamanho do sprite na barra, entre 12 e 48 pixels. |
+| `cat_color_mode` | `select` | `theme` | Usa a cor `secondary` do tema ou uma cor customizada. |
+| `cat_color` | `color` | `#E8A24C` | Cor usada quando `cat_color_mode = "custom"`. |
 
-## Tablet and Xournal++ behavior
+## Mesa e Xournal++
 
-Every 1.5 seconds the bar widget invokes the existing `livara-tablet-status` helper, which checks the physical USB/Input identity used by the configured MTM-1106/T501 driver. The helper is read-only and does not start or stop the driver. The panel remains an independent visual popup and does not add a second tablet poller.
+O widget consulta `livara-tablet-status` a cada 1,5 segundo. O helper é somente leitura e não inicia nem encerra o driver.
 
-The **New Xournal++ Note** action reuses `livara-xournal-new-note`. It opens today's note under `~/Vault/02 - Xournal++`; clicking again on the same day reopens the existing file. When the file does not yet exist, the helper passes its intended path to Xournal++ and lets the native Xournal++ profile apply the configured journal `pageTemplate` and `forceZoomToFitOnLoad`, rather than creating a competing hardcoded XML document.
+O botão **New Xournal++ Note** chama `livara-xournal-new-note`. Ele abre a nota do dia em `~/Vault/02 - Xournal++` ou reabre o arquivo existente. A configuração nativa do Xournal++ fornece o template e o ajuste de zoom.
 
-## Asset provenance
+## Assets
 
-The original `kurukuru.gif` is preserved unchanged. Its source and deterministic frame extraction are documented in [`ASSET-SOURCE.md`](ASSET-SOURCE.md). The panel uses a translucent `surface/0.88` fill, matching the bar's configured `background_opacity = 0.88`; transparency outside the character comes from the GIF alpha channel, while opaque black outlines are part of the artwork. The bar itself continues to use the reviewed `catwalk2.otf` glyph animation so tablet presence remains theme-aware and lightweight.
+O `kurukuru.gif` original permanece preservado. A origem e a extração determinística dos frames estão em [`ASSET-SOURCE.md`](ASSET-SOURCE.md). O sprite da barra usa `catwalk2.otf` para continuar leve e adaptado ao tema.
 
-To repair stale panel/bar state, close Noctalia and run `~/.local/bin/repair-noctalia-stale-bars`. The helper removes the obsolete `[bar.main]` override and rewrites `panel_anchor_bar = "main"` to the sole declarative bar, `"default"`. If Noctalia is still running, use the explicit opt-in `~/.local/bin/repair-noctalia-stale-bars --stop`; it sends SIGTERM only to exact Noctalia processes, waits for exit, performs the backup-first edit and tells you to reopen Noctalia. This is a persistent one-shot state migration, not a command needed on every login.
+## Migração de estado
+
+`repair-noctalia-stale-bars` é um reparador one-shot para estados antigos que apontam panels para uma barra removida. Ele não é necessário em logins normais; use-o somente quando houver `[bar.main]` ou `panel_anchor_bar = "main"` no estado persistido.
