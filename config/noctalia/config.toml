@@ -264,6 +264,9 @@ end = ["media", "bar", "recorder", "notifications", "session"]
 type = "noctalia/timer:bar"
 show_idle_on_horizontal = false
 
+[widget.recorder]
+type = "noctalia/screen_recorder:recorder"
+
 [widget.cat]
 type = "dotnetrob/cat:cat"
 cat_size = 32

@@ -66,6 +66,7 @@
           # Explicit, backup-first repair for GUI state left by the retired
           # second bar. It is installed but never run automatically.
           home.file.".local/bin/repair-noctalia-stale-bars".source = self + "/scripts/repair-noctalia-stale-bars.sh";
+          home.file.".local/bin/ensure-noctalia-recorder-bar".source = self + "/scripts/ensure-noctalia-recorder-bar.sh";
         };
 
       homeModules.default = self.homeModules.noctalia;
@@ -102,6 +103,7 @@
             test -f ${self}/plugins/cat/kurukuru.gif
             test "$(find ${self}/plugins/cat/frames -maxdepth 1 -type f -name 'frame-*.png' | wc -l)" -eq 6
             test -f ${self}/scripts/repair-noctalia-stale-bars.sh
+            test -f ${self}/scripts/ensure-noctalia-recorder-bar.sh
             test -f ${official-plugins}/screen_recorder/recorder_service.luau
             test -f ${official-plugins}/timer/service.luau
             touch "$out"
