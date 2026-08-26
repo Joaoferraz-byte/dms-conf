@@ -9,12 +9,14 @@ usage() {
   cat <<'EOF'
 Usage: repair-noctalia-stale-bars [--stop]
 
-Remove only the stale [bar.main] override from Noctalia settings.
+Repair only stale Noctalia bar/panel state in settings.toml:
+  - remove [bar.main] and nested bar.main tables;
+  - change panel_anchor_bar = "main" to panel_anchor_bar = "default".
 
 Without --stop, Noctalia must already be closed. With --stop, the script
 sends SIGTERM only to exact Noctalia processes, waits for them to exit, then
-creates a backup and performs the same validated edit. Reopen Noctalia after
-completion with `noctalia`.
+creates a backup and performs the validated edit. Reopen Noctalia after
+completion with the normal Niri startup or `noctalia` for a one-off test.
 EOF
 }
 
@@ -61,6 +63,11 @@ if [[ ! -f "$settings" ]]; then
   exit 0
 fi
 
+if ! grep -Eq '(^[[:space:]]*panel_anchor_bar[[:space:]]*=[[:space:]]*"main"|^\[\[?bar\.main([.]|\]))' "$settings"; then
+  printf 'No stale bar/panel state found in %s; nothing changed.\n' "$settings"
+  exit 0
+fi
+
 stop_noctalia_if_requested
 
 backup="${settings}.bak.$(date +%Y%m%d-%H%M%S)"
@@ -68,26 +75,26 @@ tmp="$(mktemp "${settings}.tmp.XXXXXX")"
 trap 'rm -f "$tmp"' EXIT
 
 awk '
-  BEGIN { removed = 0; skip = 0 }
+  BEGIN { skip = 0; removed_bar = 0; repaired_anchor = 0 }
   /^\[\[?bar\.main([.]|\])/ {
-    removed = 1
+    removed_bar = 1
     skip = 1
     next
   }
   skip && /^\[/ { skip = 0 }
-  !skip { print }
-  END {
-    if (!removed) exit 3
+  skip { next }
+  /^[[:space:]]*panel_anchor_bar[[:space:]]*=[[:space:]]*"main"([[:space:]]*(#.*)?)?$/ {
+    print "panel_anchor_bar = \"default\""
+    repaired_anchor = 1
+    next
   }
-' "$settings" > "$tmp" || {
-  status=$?
-  if [[ "$status" -eq 3 ]]; then
-    printf 'No [bar.main] override found in %s; nothing changed.\n' "$settings"
-    exit 0
-  fi
-  printf 'Could not filter %s safely.\n' "$settings" >&2
-  exit "$status"
-}
+  { print }
+  END {
+    if (removed_bar || repaired_anchor) {
+      printf "# repair: removed_bar=%d repaired_anchor=%d\n", removed_bar, repaired_anchor > "/dev/stderr"
+    }
+  }
+' "$settings" >"$tmp"
 
 cp -a "$settings" "$backup"
 mv -f "$tmp" "$settings"
@@ -98,5 +105,6 @@ if command -v noctalia >/dev/null 2>&1 && ! noctalia config validate >/dev/null;
   exit 1
 fi
 
-printf 'Removed stale [bar.main] override.\nBackup: %s\nState: %s\n' "$backup" "$settings"
-printf 'Reopen Noctalia with: noctalia\n'
+printf 'Repaired stale Noctalia panel/bar state.\nBackup: %s\nState: %s\n' "$backup" "$settings"
+printf 'The repair is persistent; do not rerun it unless a future settings edit recreates the stale state.\n'
+printf 'Reopen Noctalia with the normal Niri startup or: noctalia\n'
