@@ -265,7 +265,9 @@ icon_color = "primary"
 scale = 1.1
 
 [widget.media]
-art_size = 42
+# Keep the square artwork inside the 33px bar thickness; v5 clips it with
+# radius = artSize / 2 for a true circle.
+art_size = 28
 hide_when_no_media = true
 max_length = 149
 min_length = 198
