@@ -29,6 +29,11 @@
     {
       homeModules.noctalia = { config, lib, pkgs, desktopProfile ? {}, ... }:
         let
+          screenRecorderPlugin = pkgs.applyPatches {
+            name = "noctalia-screen-recorder-focused";
+            src = official-plugins + "/screen_recorder";
+            patches = [ (self + "/patches/screen-recorder-focused.patch") ];
+          };
           # The shared TOML remains valid and readable in the repository. The
           # host-specific bar policy is materialized here from the same
           # desktopProfile contract used by the NixOS host modules.
@@ -59,7 +64,7 @@
           # the repository under XDG_STATE_HOME/noctalia.
           xdg.dataFile = {
             "noctalia/plugins/cat".source = self + "/plugins/cat";
-            "noctalia/plugins/screen_recorder".source = official-plugins + "/screen_recorder";
+            "noctalia/plugins/screen_recorder".source = screenRecorderPlugin;
             "noctalia/plugins/timer".source = official-plugins + "/timer";
           };
 
@@ -74,6 +79,11 @@
       checks = forEachSystem (system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
+          screenRecorderPlugin = pkgs.applyPatches {
+            name = "noctalia-screen-recorder-focused";
+            src = official-plugins + "/screen_recorder";
+            patches = [ (self + "/patches/screen-recorder-focused.patch") ];
+          };
         in
         {
           noctalia-config = pkgs.runCommand "noctalia-config-check" {
@@ -95,7 +105,9 @@
           '';
           plugin-manifests = pkgs.runCommand "noctalia-plugin-manifest-check" { } ''
             grep -q '^id[[:space:]]*=[[:space:]]*"dotnetrob/cat"' ${self}/plugins/cat/plugin.toml
-            grep -q '^id[[:space:]]*=[[:space:]]*"noctalia/screen_recorder"' ${official-plugins}/screen_recorder/plugin.toml
+            grep -q '^id[[:space:]]*=[[:space:]]*"noctalia/screen_recorder"' ${screenRecorderPlugin}/plugin.toml
+            grep -q '^default[[:space:]]*=[[:space:]]*"focused"' ${screenRecorderPlugin}/plugin.toml
+            grep -q 'fallback-cpu-encoding yes' ${screenRecorderPlugin}/recorder_service.luau
             grep -q '^id[[:space:]]*=[[:space:]]*"noctalia/timer"' ${official-plugins}/timer/plugin.toml
             grep -q '^plugin_api[[:space:]]*=[[:space:]]*[0-9]' ${self}/plugins/cat/plugin.toml
             test -f ${self}/plugins/cat/cat.luau
@@ -104,7 +116,7 @@
             test "$(find ${self}/plugins/cat/frames -maxdepth 1 -type f -name 'frame-*.png' | wc -l)" -eq 6
             test -f ${self}/scripts/repair-noctalia-stale-bars.sh
             test -f ${self}/scripts/ensure-noctalia-recorder-bar.sh
-            test -f ${official-plugins}/screen_recorder/recorder_service.luau
+            test -f ${screenRecorderPlugin}/recorder_service.luau
             test -f ${official-plugins}/timer/service.luau
             touch "$out"
           '';

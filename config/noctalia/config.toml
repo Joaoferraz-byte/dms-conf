@@ -6,6 +6,9 @@
 enabled = ["dotnetrob/cat", "noctalia/timer", "noctalia/screen_recorder"]
 auto_update = "none"
 
+[plugin_settings."noctalia/screen_recorder"]
+video_source = "focused"
+
 [shell]
 avatar_path = "~/Pictures/Pfps-and-logos/icon.png"
 font_family = "JetBrains Mono"
