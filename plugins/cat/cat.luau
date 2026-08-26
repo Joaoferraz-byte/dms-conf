@@ -120,3 +120,7 @@ end
 
 render()
 refreshTabletStatus()
+
+function onClick()
+  noctalia.togglePanel("dotnetrob/cat:panel")
+end

@@ -1,7 +1,7 @@
 id           = "dotnetrob/cat"
 name         = "Cat"
-version      = "1.3.0"
-plugin_api   = 9
+version      = "1.4.0"
+plugin_api   = 18
 author       = "DotNetRob"
 license      = "MIT"
 dependencies = []
@@ -9,16 +9,17 @@ icon         = "paw"
 description  = "An animated cat that sleeps without the tablet and walks while it is connected."
 tags         = ["bar", "animation", "system", "fun"]
 
-# Popup opened by clicking the bar widget: the same cat, bigger, with a
-# Xournal++ note action in the footer. Attached to the bar near the click; the
-# host default dismiss-on-outside-click makes it behave like a transient popup.
+# Popup opened by clicking the bar widget: the kurukuru animation is centered
+# above the Xournal++ note action. A floating center panel avoids tying the
+# visual popup to the bar edge while the host default dismisses outside clicks.
 [[panel]]
 id              = "panel"
 entry           = "cat_panel.luau"
-width           = 280
-height          = 240
-placement       = "attached"
-open_near_click = true
+width           = 360
+height          = 390
+placement       = "floating"
+position        = "center"
+open_near_click = false
 
 [[widget]]
 id    = "cat"

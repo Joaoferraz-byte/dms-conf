@@ -1,28 +1,43 @@
 --!nonstrict
--- Cat panel: the popup opened by clicking the bar widget. Shows the same cat
--- glyph as the bar, just bigger, with a footer action for the daily note.
---
--- The panel runs in its own Luau runtime, so it can't share locals with
--- cat.luau. Instead the bar widget publishes { glyph, color, pace } to the
--- plugin's shared state store under "cat" whenever any of them change, and
--- this script re-renders on every update. No ticks of its own are needed.
+-- Central Cat popup. The original kurukuru.gif is preserved beside this
+-- entry; the six extracted PNG frames are used because Noctalia v5's
+-- ui.image presents one texture and does not animate GIFs itself.
 
-local catFont = noctalia.loadFont("fonts/catwalk2.otf")
+local FRAME_COUNT = 6
+local FRAME_MS = 60
+local IMAGE_WIDTH = 300
+local IMAGE_HEIGHT = 253
 
-local PANEL_CAT_SIZE = 120
-
+local frameIndex = 0
+local frameElapsed = 0
 local snapshot = nil
 
+local function framePath()
+  return string.format("./frames/frame-%03d.png", frameIndex)
+end
+
 local function render()
-  local glyph = snapshot and snapshot.glyph or "a"
-  local color = snapshot and snapshot.color or "secondary"
-  panel.render(ui.column({ gap = 10, align = "center", padding = 20 }, {
-    ui.label({
-      text = glyph,
-      fontFamily = catFont,
-      baseline = "inkCentered",
-      fontSize = PANEL_CAT_SIZE,
-      color = color,
+  panel.render(ui.column({
+    fill = "surface/0.96",
+    radius = 20,
+    border = "outline_variant",
+    borderWidth = 1,
+    gap = 12,
+    padding = 16,
+    paddingV = 16,
+    align = "center",
+    justify = "start",
+  }, {
+    -- Deliberately adds a little more top breathing room than the equal
+    -- side/bottom padding, keeping the animation away from the button.
+    ui.spacer({ height = 8 }),
+    ui.image({
+      key = "kurukuru-animation",
+      path = framePath(),
+      width = IMAGE_WIDTH,
+      height = IMAGE_HEIGHT,
+      fit = "contain",
+      radius = 14,
     }),
     ui.spacer({ flexGrow = 1 }),
     ui.separator({ thickness = 1, color = "outline_variant", spacing = 2 }),
@@ -30,9 +45,9 @@ local function render()
       text = "New Xournal++ Note",
       glyph = "note",
       variant = "primary",
-      controlSize = "sm",
-      width = 232,
-      tooltip = "Open today's Xournal++ note",
+      controlSize = "md",
+      width = 300,
+      tooltip = "Open today's Xournal++ journal note",
       onClick = "onNewNote",
     }),
   }))
@@ -40,16 +55,32 @@ end
 
 function onNewNote()
   if not noctalia.runAsync({ "livara-xournal-new-note" }) then
-    noctalia.notifyError("Xournal++", "Could not start the daily note")
+    noctalia.notifyError("Xournal++", "Could not start today's journal note")
   end
+end
+
+function onOpen()
+  frameIndex = 0
+  frameElapsed = 0
+  snapshot = noctalia.state.get("cat")
+  panel.setNeedsFrameTick(true)
+  render()
+end
+
+function onClose()
+  panel.setNeedsFrameTick(false)
+end
+
+function onFrameTick(deltaMs)
+  frameElapsed += deltaMs
+  while frameElapsed >= FRAME_MS do
+    frameElapsed -= FRAME_MS
+    frameIndex = (frameIndex + 1) % FRAME_COUNT
+  end
+  render()
 end
 
 noctalia.state.watch("cat", function(value)
   snapshot = value
   render()
 end)
-
-function onOpen()
-  snapshot = noctalia.state.get("cat")
-  render()
-end

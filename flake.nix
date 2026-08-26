@@ -56,6 +56,10 @@
             "noctalia/plugins/screen_recorder".source = official-plugins + "/screen_recorder";
             "noctalia/plugins/timer".source = official-plugins + "/timer";
           };
+
+          # Explicit, backup-first repair for GUI state left by the retired
+          # second bar. It is installed but never run automatically.
+          home.file.".local/bin/repair-noctalia-stale-bars".source = self + "/scripts/repair-noctalia-stale-bars.sh";
         };
 
       homeModules.default = self.homeModules.noctalia;
@@ -84,6 +88,10 @@
             grep -q '^id[[:space:]]*=[[:space:]]*"noctalia/timer"' ${official-plugins}/timer/plugin.toml
             grep -q '^plugin_api[[:space:]]*=[[:space:]]*[0-9]' ${self}/plugins/cat/plugin.toml
             test -f ${self}/plugins/cat/cat.luau
+            test -f ${self}/plugins/cat/cat_panel.luau
+            test -f ${self}/plugins/cat/kurukuru.gif
+            test "$(find ${self}/plugins/cat/frames -maxdepth 1 -type f -name 'frame-*.png' | wc -l)" -eq 6
+            test -f ${self}/scripts/repair-noctalia-stale-bars.sh
             test -f ${official-plugins}/screen_recorder/recorder_service.luau
             test -f ${official-plugins}/timer/service.luau
             touch "$out"
