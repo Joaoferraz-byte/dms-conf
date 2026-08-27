@@ -157,6 +157,9 @@ directory = "~/Wallpapers"
 # an image from this directory at shell startup.
 [wallpaper.automation]
 enabled = true
+interval_seconds = 3600
+order = "random"
+recursive = true
 
 [lockscreen]
 enabled = true
