@@ -25,7 +25,7 @@ description = "Record the screen with gpu-screen-recorder."
 key = "video_source"
 type = "select"
 label_key = "settings.video_source.label"
-default = "portal"
+default = "focused"
 description_key = "settings.video_source.description"
 options = [
   { value = "focused", label_key = "settings.video_source.options.focused" },

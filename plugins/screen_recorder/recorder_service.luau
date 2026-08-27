@@ -278,7 +278,7 @@ local function buildRecordCommand(focusedOutputName, sourceOverride)
     local audioFlags = buildAudioFlags()
     local resFlag = buildResolutionFlag()
 
-    local flags = `-w {source} -f {fps} -k {codec} {audioFlags} -bm qp -ffmpeg-video-opts qp={qp} -cursor {cursor} -cr {cr} {resFlag} {restore} -v no -o "{outputPath}"`
+    local flags = `-w {source} -f {fps} -k {codec} -fallback-cpu-encoding yes {audioFlags} -bm qp -ffmpeg-video-opts qp={qp} -cursor {cursor} -cr {cr} {resFlag} {restore} -v no -o "{outputPath}"`
 
     log(`starting recording: mode={selectedVideoSource(sourceOverride)} target={source} output={outputPath} flags=[{flags}]`)
 

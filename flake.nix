@@ -9,18 +9,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    official-plugins = {
-      url = "github:noctalia-dev/official-plugins";
-      flake = false;
-    };
-
     community-templates = {
       url = "github:noctalia-dev/community-templates";
       flake = false;
     };
   };
 
-    outputs = inputs@{ self, nixpkgs, noctalia, official-plugins, ... }:
+    outputs = inputs@{ self, nixpkgs, noctalia, ... }:
     let
       communityTemplates = inputs."community-templates";
       systems = [ "x86_64-linux" "aarch64-linux" ];
@@ -29,11 +24,6 @@
     {
       homeModules.noctalia = { config, lib, pkgs, desktopProfile ? {}, ... }:
         let
-          screenRecorderPlugin = pkgs.applyPatches {
-            name = "noctalia-screen-recorder-focused";
-            src = official-plugins + "/screen_recorder";
-            patches = [ (self + "/patches/screen-recorder-focused.patch") ];
-          };
           # The shared TOML remains valid and readable in the repository. The
           # host-specific bar policy is materialized here from the same
           # desktopProfile contract used by the NixOS host modules.
@@ -64,8 +54,13 @@
           # the repository under XDG_STATE_HOME/noctalia.
           xdg.dataFile = {
             "noctalia/plugins/cat".source = self + "/plugins/cat";
-            "noctalia/plugins/screen_recorder".source = screenRecorderPlugin;
-            "noctalia/plugins/timer".source = official-plugins + "/timer";
+            "noctalia/plugins/screen_recorder".source = self + "/plugins/screen_recorder";
+            "noctalia/plugins/timer".source = self + "/plugins/timer";
+            "noctalia/plugins/screen_toolkit".source = self + "/plugins/screen_toolkit";
+            "noctalia/plugins/gamer_mode".source = self + "/plugins/gamer_mode";
+            "noctalia/plugins/dns_switcher".source = self + "/plugins/dns_switcher";
+            "noctalia/plugins/prismlauncher_instances".source = self + "/plugins/prismlauncher_instances";
+            "noctalia/plugins/bitwarden".source = self + "/plugins/bitwarden";
           };
 
           # Explicit, backup-first repair for GUI state left by the retired
@@ -79,11 +74,6 @@
       checks = forEachSystem (system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
-          screenRecorderPlugin = pkgs.applyPatches {
-            name = "noctalia-screen-recorder-focused";
-            src = official-plugins + "/screen_recorder";
-            patches = [ (self + "/patches/screen-recorder-focused.patch") ];
-          };
         in
         {
           noctalia-config = pkgs.runCommand "noctalia-config-check" {
@@ -105,10 +95,10 @@
           '';
           plugin-manifests = pkgs.runCommand "noctalia-plugin-manifest-check" { } ''
             grep -q '^id[[:space:]]*=[[:space:]]*"dotnetrob/cat"' ${self}/plugins/cat/plugin.toml
-            grep -q '^id[[:space:]]*=[[:space:]]*"noctalia/screen_recorder"' ${screenRecorderPlugin}/plugin.toml
-            grep -q '^default[[:space:]]*=[[:space:]]*"focused"' ${screenRecorderPlugin}/plugin.toml
-            grep -q 'fallback-cpu-encoding yes' ${screenRecorderPlugin}/recorder_service.luau
-            grep -q '^id[[:space:]]*=[[:space:]]*"noctalia/timer"' ${official-plugins}/timer/plugin.toml
+            grep -q '^id[[:space:]]*=[[:space:]]*"noctalia/screen_recorder"' ${self}/plugins/screen_recorder/plugin.toml
+            grep -q '^default[[:space:]]*=[[:space:]]*"focused"' ${self}/plugins/screen_recorder/plugin.toml
+            grep -q 'fallback-cpu-encoding yes' ${self}/plugins/screen_recorder/recorder_service.luau
+            grep -q '^id[[:space:]]*=[[:space:]]*"noctalia/timer"' ${self}/plugins/timer/plugin.toml
             grep -q '^plugin_api[[:space:]]*=[[:space:]]*[0-9]' ${self}/plugins/cat/plugin.toml
             test -f ${self}/plugins/cat/cat.luau
             test -f ${self}/plugins/cat/cat_panel.luau
@@ -116,8 +106,13 @@
             grep -q 'fontFamily = catFont' ${self}/plugins/cat/cat_panel.luau
             test -f ${self}/scripts/repair-noctalia-stale-bars.sh
             test -f ${self}/scripts/ensure-noctalia-recorder-bar.sh
-            test -f ${screenRecorderPlugin}/recorder_service.luau
-            test -f ${official-plugins}/timer/service.luau
+            test -f ${self}/plugins/screen_recorder/recorder_service.luau
+            test -f ${self}/plugins/timer/service.luau
+            grep -q '^id[[:space:]]*=[[:space:]]*"alexander/screen-toolkit"' ${self}/plugins/screen_toolkit/plugin.toml
+            grep -q '^id[[:space:]]*=[[:space:]]*"nomadcxx/gamer-mode"' ${self}/plugins/gamer_mode/plugin.toml
+            grep -q '^id[[:space:]]*=[[:space:]]*"nightwatch75/dns-switcher"' ${self}/plugins/dns_switcher/plugin.toml
+            grep -q '^id[[:space:]]*=[[:space:]]*"radimous/prismlauncher-instances"' ${self}/plugins/prismlauncher_instances/plugin.toml
+            grep -q '^id[[:space:]]*=[[:space:]]*"noctalia/bitwarden"' ${self}/plugins/bitwarden/plugin.toml
             touch "$out"
           '';
         });

@@ -3,11 +3,56 @@
 # monitor-specific widget geometry stay in $XDG_STATE_HOME/noctalia/.
 
 [plugins]
-enabled = ["dotnetrob/cat", "noctalia/timer", "noctalia/screen_recorder"]
+enabled = [
+  "dotnetrob/cat",
+  "noctalia/timer",
+  "noctalia/screen_recorder",
+  "alexander/screen-toolkit",
+  "nomadcxx/gamer-mode",
+  "nightwatch75/dns-switcher",
+  "radimous/prismlauncher-instances",
+  "noctalia/bitwarden",
+]
 auto_update = "none"
 
 [plugin_settings."noctalia/screen_recorder"]
 video_source = "focused"
+
+[plugin_settings."alexander/screen-toolkit"]
+screenshot-path = "~/Pictures/Screenshots"
+video-path = "~/Videos/Screen-Toolkit"
+filename-format = "%Y-%m-%d_%H-%M-%S"
+record-audio-out = false
+record-audio-in = false
+hide-cursor = true
+record-codec = "h264"
+record-fps = 60
+record-skip-confirmation = false
+record-copy-to-clipboard = false
+panel-mode = "standard"
+
+[plugin_settings."nomadcxx/gamer-mode"]
+click_action = "open_panel"
+poll_interval = "3"
+profile = "light"
+auto_performance = true
+show_temps = true
+
+[plugin_settings."nightwatch75/dns-switcher"]
+providers = "google,cloudflare,opendns,adguard,quad9"
+poll_seconds = 10
+privilege_command = ""
+
+[plugin_settings."radimous/prismlauncher-instances"]
+prism_path = "~/.var/app/org.freesmlauncher.FreesmLauncher/data/PrismLauncher"
+launcher_exec_command = "flatpak run org.freesmlauncher.FreesmLauncher"
+
+[plugin_settings."noctalia/bitwarden"]
+serve_port = 8087
+auto_serve = true
+vault_timeout = "on_restart"
+copy_field = "password"
+notify_on_copy = true
 
 [shell]
 avatar_path = "~/Pictures/Pfps-and-logos/icon.png"
@@ -24,6 +69,18 @@ ui_scale = 0.8
 
 [shell.launcher]
 categories = false
+
+[shell.screenshot]
+save_to_file = true
+directory = "~/Pictures/Screenshots"
+filename_pattern = "screenshot_%Y%m%d_%H%M%S"
+copy_to_clipboard = true
+freeze_screen = true
+confirm_region = false
+remember_last_region = true
+show_cursor = false
+pipe_to_command = false
+pipe_command = ""
 
 [shell.launcher.providers.calculator]
 prefix = "="
@@ -227,6 +284,9 @@ type = "caffeine"
 
 [[control_center.shortcuts]]
 type = "dark_mode"
+
+[[control_center.shortcuts]]
+type = "alexander/screen-toolkit:toggle"
 
 [audio]
 enable_sounds = true
