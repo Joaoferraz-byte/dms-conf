@@ -45,6 +45,8 @@ Shortcut controls:
 
 Replay controls are available only when `replay_enabled` is true.
 
+The Niri recording shortcuts use the direct shell adapters because they provide deterministic SIGINT finalization. Those adapters intentionally do not show a start toast, so their notification sound cannot be captured from `default_output`. The headless service may observe an externally started recorder to keep the widget state accurate, but it does not emit a second save notification for that external process.
+
 ## Settings
 
 | Setting | Type | Default | Description |

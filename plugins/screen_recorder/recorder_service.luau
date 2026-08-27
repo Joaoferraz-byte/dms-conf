@@ -17,6 +17,9 @@ local state = "idle" -- idle | pending | recording | replay_pending | replaying
 local RECORDING_STATES = { "recording", "pending" }
 local REPLAY_STATES = { "replaying", "replay_pending" }
 local outputPath = ""
+local recordingOwner = "none" -- none | service | external
+local recordingGeneration = 0
+local stopRequested = false
 local isAvailable = false
 local tickCount = 0
 local pendingTick = 0
@@ -155,10 +158,14 @@ end
 -- notifyIfMissing: when the recorder ended on its own (not a user stop) and no
 -- output file exists, gpu-screen-recorder died early — surface its captured output.
 local function notifyRecordingSavedIfPresent(notifyIfMissing)
+    if recordingOwner ~= "service" then return end
+
     local savedPath = outputPath
+    local generation = recordingGeneration
     if savedPath == "" then return end
 
     noctalia.runAsync(`sleep 0.5; test -s {shellQuote(savedPath)}`, function(result)
+        if generation ~= recordingGeneration then return end
         if result.exitCode ~= 0 then
             if notifyIfMissing then
                 logGsrTail("recording stopped early with no output file")
@@ -335,6 +342,9 @@ end
 local function startRecording(focusedOutputName, sourceOverride)
     if not isAvailable or state ~= "idle" then return end
 
+    recordingOwner = "service"
+    recordingGeneration += 1
+    stopRequested = false
     setState("pending")
     pendingTick = 0
     updateDisplay()
@@ -343,6 +353,9 @@ local function startRecording(focusedOutputName, sourceOverride)
         if (state :: string) ~= "pending" then return end -- cast: state is widened, not the "idle" the analyzer narrows it to
 
         if not portalAvailable then
+            recordingOwner = "none"
+            recordingGeneration += 1
+            stopRequested = false
             setState("idle")
             log("recording aborted: xdg-desktop-portal / backend not running")
             noctalia.notifyError(noctalia.tr("notify.recording-failed"), noctalia.tr("notify.portal-not-running"))
@@ -352,6 +365,9 @@ local function startRecording(focusedOutputName, sourceOverride)
 
         local cmd = buildRecordCommand(focusedOutputName, sourceOverride)
         if not cmd then
+            recordingOwner = "none"
+            recordingGeneration += 1
+            stopRequested = false
             setState("idle")
             log("recording aborted: could not build command (no video source)")
             updateDisplay()
@@ -361,6 +377,9 @@ local function startRecording(focusedOutputName, sourceOverride)
         if noctalia.runAsync(cmd) then
             log("gpu-screen-recorder launched")
         else
+            recordingOwner = "none"
+            recordingGeneration += 1
+            stopRequested = false
             setState("idle")
             log("recording aborted: runAsync failed to launch gpu-screen-recorder")
             noctalia.notifyError(noctalia.tr("notify.recording-failed"), noctalia.tr("notify.launch-failed"))
@@ -370,18 +389,23 @@ local function startRecording(focusedOutputName, sourceOverride)
 end
 
 local function stopRecording()
-    if not table.find(RECORDING_STATES, state) then return end
+    if not table.find(RECORDING_STATES, state) or stopRequested then return end
+
+    if state == "pending" then
+        recordingOwner = "none"
+        recordingGeneration += 1
+        stopRequested = false
+        setState("idle")
+        return
+    end
 
     log("stopping recording (user request)")
+    stopRequested = true
     noctalia.runAsync("pkill -SIGINT -f '^(/nix/store/.*-)?gpu-screen-recorder' 2>/dev/null || pkill -SIGINT -f '^com.dec05eba.gpu_screen_recorder' 2>/dev/null || true")
     -- Force kill fallback
     noctalia.runAsync("(sleep 3 && pkill -9 -f '^(/nix/store/.*-)?gpu-screen-recorder' 2>/dev/null || true) &")
-
-    if state == "recording" then
-        notifyRecordingSavedIfPresent()
-    end
-
-    setState("idle")
+    -- Keep the recording state until the process disappears. This prevents the
+    -- observer from adopting the still-draining process as a new external one.
 end
 
 -- ── Replay controls ──────────────────────────────────────────────────────
@@ -480,6 +504,10 @@ local function checkProcessState(processState)
             else
                 log("recording never started (process not detected)")
                 logGsrTail("recording failed to start")
+                recordingOwner = "none"
+                recordingGeneration += 1
+                stopRequested = false
+                outputPath = ""
                 setState("idle")
                 noctalia.notifyError(noctalia.tr("notify.recording-failed"), noctalia.tr("notify.recording-stopped-early"))
             end
@@ -500,9 +528,14 @@ local function checkProcessState(processState)
         end
     elseif state == "recording" then
         if processState ~= "recording" then
-            log("recording process ended on its own")
+            log("recording process ended")
+            if recordingOwner == "service" then
+                notifyRecordingSavedIfPresent(true)
+            end
             setState("idle")
-            notifyRecordingSavedIfPresent(true)
+            recordingOwner = "none"
+            stopRequested = false
+            outputPath = ""
         end
     elseif state == "replaying" then
         if processState ~= "replaying" then
@@ -513,6 +546,10 @@ local function checkProcessState(processState)
         end
     elseif state == "idle" then
         if processState ~= nil then
+            recordingOwner = "external"
+            recordingGeneration += 1
+            stopRequested = false
+            outputPath = ""
             log(`adopted externally-started gpu-screen-recorder ({processState})`)
             setState(processState)
         end
