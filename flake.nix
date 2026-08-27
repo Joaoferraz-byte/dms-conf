@@ -112,8 +112,8 @@
             grep -q '^plugin_api[[:space:]]*=[[:space:]]*[0-9]' ${self}/plugins/cat/plugin.toml
             test -f ${self}/plugins/cat/cat.luau
             test -f ${self}/plugins/cat/cat_panel.luau
-            test -f ${self}/plugins/cat/kurukuru.gif
-            test "$(find ${self}/plugins/cat/frames -maxdepth 1 -type f -name 'frame-*.png' | wc -l)" -eq 6
+            test -f ${self}/plugins/cat/fonts/catwalk2.otf
+            grep -q 'fontFamily = catFont' ${self}/plugins/cat/cat_panel.luau
             test -f ${self}/scripts/repair-noctalia-stale-bars.sh
             test -f ${self}/scripts/ensure-noctalia-recorder-bar.sh
             test -f ${screenRecorderPlugin}/recorder_service.luau

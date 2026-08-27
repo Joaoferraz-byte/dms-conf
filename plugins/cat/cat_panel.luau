@@ -1,26 +1,18 @@
 --!nonstrict
 
-local FRAME_COUNT = 6
-local FRAME_MS = 60
-local IMAGE_WIDTH = 300
-local IMAGE_HEIGHT = 250
-local BUTTON_WIDTH = 156
+local catFont = noctalia.loadFont("fonts/catwalk2.otf")
+local PANEL_CAT_SIZE = 120
 
-local frameIndex = 0
-local frameElapsed = 0
 local panelOpen = false
-local tabletConnected = false
+local snapshot = nil
 
-local function readTabletState()
-  local state = noctalia.state.get("cat")
-  tabletConnected = type(state) == "table" and state.connected == true
+local function readCatState()
+  snapshot = noctalia.state.get("cat")
 end
 
 local function render()
-  local xournalVariant = tabletConnected and "primary" or "secondary"
-  local xournalTooltip = tabletConnected
-    and "Open today's Xournal journal"
-    or "Tablet inactive — connect tablet to enable New Xournal"
+  local glyph = snapshot and snapshot.glyph or "a"
+  local color = snapshot and snapshot.color or "secondary"
 
   panel.render(ui.column({
     flexGrow = 1,
@@ -29,12 +21,12 @@ local function render()
     align = "center",
   }, {
     ui.spacer({ height = 8 }),
-    ui.image({
-      key = "kurukuru-animation",
-      path = string.format("./frames/frame-%03d.png", frameIndex),
-      width = IMAGE_WIDTH,
-      height = IMAGE_HEIGHT,
-      fit = "contain",
+    ui.label({
+      text = glyph,
+      fontFamily = catFont,
+      baseline = "inkCentered",
+      fontSize = PANEL_CAT_SIZE,
+      color = color,
     }),
     ui.spacer({ flexGrow = 1 }),
     ui.separator({ thickness = 1, color = "outline_variant", spacing = 2 }),
@@ -42,17 +34,19 @@ local function render()
       ui.button({
         text = "New Xournal",
         glyph = "note",
-        variant = xournalVariant,
+        variant = snapshot and snapshot.connected and "primary" or "secondary",
         controlSize = "sm",
-        width = BUTTON_WIDTH,
-        tooltip = xournalTooltip,
+        width = 156,
+        tooltip = snapshot and snapshot.connected
+          and "Open today's Xournal journal"
+          or "Tablet inactive — connect tablet to enable New Xournal",
         onClick = "onNewXournal",
       }),
       ui.button({
         text = "New Daily",
         variant = "primary",
         controlSize = "sm",
-        width = BUTTON_WIDTH,
+        width = 156,
         tooltip = "Open today's Obsidian Daily Note",
         onClick = "onNewDaily",
       }),
@@ -61,8 +55,8 @@ local function render()
 end
 
 function onNewXournal()
-  readTabletState()
-  if not tabletConnected then
+  readCatState()
+  if not (snapshot and snapshot.connected == true) then
     noctalia.notifyError("Xournal++", "Tablet inactive — connect the tablet first")
     render()
     return
@@ -81,25 +75,12 @@ end
 
 function onOpen(_context)
   panelOpen = true
-  frameIndex = 0
-  frameElapsed = 0
-  readTabletState()
-  panel.setNeedsFrameTick(true)
+  readCatState()
   render()
 end
 
 function onClose()
   panelOpen = false
-  panel.setNeedsFrameTick(false)
-end
-
-function onFrameTick(deltaMs)
-  frameElapsed += deltaMs
-  while frameElapsed >= FRAME_MS do
-    frameElapsed -= FRAME_MS
-    frameIndex = (frameIndex + 1) % FRAME_COUNT
-  end
-  render()
 end
 
 noctalia.state.watch("cat", function(value)
@@ -107,6 +88,6 @@ noctalia.state.watch("cat", function(value)
     return
   end
 
-  tabletConnected = type(value) == "table" and value.connected == true
+  snapshot = value
   render()
 end)

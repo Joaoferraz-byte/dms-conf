@@ -12,7 +12,7 @@ Widget Cat sensível à mesa digitalizadora para o Noctalia. Ele dorme quando a 
 
 ## Uso
 
-Adicione o widget **Cat** em **Settings → Bar → Add Widget**. Clique nele para abrir o panel attached, que usa a surface nativa do Noctalia. A animação `kurukuru.gif` aparece acima do botão **New Xournal++ Note**; seis frames PNG são usados porque `ui.image` apresenta uma textura por vez.
+Adicione o widget **Cat** em **Settings → Bar → Add Widget**. Clique nele para abrir o panel attached, que usa a surface nativa do Noctalia. O painel amplia o mesmo gato do widget usando a fonte animada `catwalk2.otf`: ele caminha quando a mesa está conectada e dorme quando ela está desconectada.
 
 O panel também pode ser aberto por IPC:
 
@@ -34,11 +34,13 @@ Clique fora do panel para fechá-lo.
 
 O widget consulta `livara-tablet-status` a cada 1,5 segundo. O helper é somente leitura e não inicia nem encerra o driver.
 
-O botão **New Xournal++ Note** chama `livara-xournal-new-note`. Ele abre a nota do dia em `~/Vault/02 - Xournal++` ou reabre o arquivo existente. A configuração nativa do Xournal++ fornece o template e o ajuste de zoom.
+O botão **New Xournal** chama `livara-xournal-new-note`. Ele abre a nota do dia em `~/Vault/02 - Xournal++` ou reabre o arquivo existente. A configuração nativa do Xournal++ fornece o template e o ajuste de zoom. O botão fica visualmente secundário e informa que a mesa está inativa quando o dispositivo não está conectado.
+
+O botão **New Daily** chama `livara-obsidian-daily-note`, que abre a ação oficial `obsidian://daily?vault=Vault`. A pasta, o formato e o template continuam sob responsabilidade do Daily Notes core do Obsidian.
 
 ## Assets
 
-O `kurukuru.gif` original permanece preservado. A origem e a extração determinística dos frames estão em [`ASSET-SOURCE.md`](ASSET-SOURCE.md). O sprite da barra usa `catwalk2.otf` para continuar leve e adaptado ao tema.
+O painel e a barra usam a mesma fonte `catwalk2.otf`, mantendo glyph, cor adaptativa e estado walking/sleep sincronizados por `noctalia.state`. Não há uma segunda animação ou asset visual para o painel.
 
 ## Migração de estado
 
