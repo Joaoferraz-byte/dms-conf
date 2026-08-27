@@ -53,7 +53,7 @@ local function render()
     color = color,
   }))
 
-  barWidget.setTooltip(connected and "Tablet connected — walking" or "Tablet disconnected — sleeping")
+  barWidget.setTooltip(connected and "Tablet connected — click to open" or "Tablet disconnected — click to open panel")
 end
 
 local function setTabletConnected(connected)
@@ -122,8 +122,5 @@ render()
 refreshTabletStatus()
 
 function onClick()
-  if not tabletConnected then
-    return
-  end
   noctalia.togglePanel("dotnetrob/cat:panel")
 end
