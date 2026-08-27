@@ -1,7 +1,7 @@
 --!nonstrict
 
 local catFont = noctalia.loadFont("fonts/catwalk2.otf")
-local PANEL_CAT_SIZE = 120
+local PANEL_CAT_SIZE = 260
 
 local panelOpen = false
 local snapshot = nil
@@ -44,6 +44,7 @@ local function render()
       }),
       ui.button({
         text = "New Daily",
+        glyph = "calendar",
         variant = "primary",
         controlSize = "sm",
         width = 156,
