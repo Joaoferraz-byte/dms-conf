@@ -30,7 +30,7 @@ local function render()
     }),
     ui.spacer({ flexGrow = 1 }),
     ui.separator({ thickness = 1, color = "outline_variant", spacing = 2 }),
-    ui.row({ gap = 8, justify = "space_between" }, {
+    ui.row({ width = 320, gap = 8, justify = "center", align = "center" }, {
       ui.button({
         text = "New Xournal",
         glyph = "note",
