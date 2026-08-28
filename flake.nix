@@ -63,10 +63,6 @@
             "noctalia/plugins/bitwarden".source = self + "/plugins/bitwarden";
           };
 
-          # Explicit, backup-first repair for GUI state left by the retired
-          # second bar. It is installed but never run automatically.
-          home.file.".local/bin/repair-noctalia-stale-bars".source = self + "/scripts/repair-noctalia-stale-bars.sh";
-          home.file.".local/bin/ensure-noctalia-recorder-bar".source = self + "/scripts/ensure-noctalia-recorder-bar.sh";
         };
 
       homeModules.default = self.homeModules.noctalia;
@@ -104,8 +100,6 @@
             test -f ${self}/plugins/cat/cat_panel.luau
             test -f ${self}/plugins/cat/fonts/catwalk2.otf
             grep -q 'fontFamily = catFont' ${self}/plugins/cat/cat_panel.luau
-            test -f ${self}/scripts/repair-noctalia-stale-bars.sh
-            test -f ${self}/scripts/ensure-noctalia-recorder-bar.sh
             test -f ${self}/plugins/screen_recorder/recorder_service.luau
             test -f ${self}/plugins/timer/service.luau
             grep -q '^id[[:space:]]*=[[:space:]]*"alexander/screen-toolkit"' ${self}/plugins/screen_toolkit/plugin.toml

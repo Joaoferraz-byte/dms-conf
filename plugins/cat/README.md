@@ -41,7 +41,3 @@ O botão **New Daily** chama `livara-obsidian-daily-note`, que abre a ação ofi
 ## Assets
 
 O painel e a barra usam a mesma fonte `catwalk2.otf`, mantendo glyph, cor adaptativa e estado walking/sleep sincronizados por `noctalia.state`. Não há uma segunda animação ou asset visual para o painel.
-
-## Migração de estado
-
-`repair-noctalia-stale-bars` é um reparador one-shot para estados antigos que apontam panels para uma barra removida. Ele não é necessário em logins normais; use-o somente quando houver `[bar.main]` ou `panel_anchor_bar = "main"` no estado persistido.
