@@ -34,12 +34,10 @@ local function render()
       ui.button({
         text = "New Xournal",
         glyph = "note",
-        variant = snapshot and snapshot.connected and "primary" or "secondary",
+        variant = "primary",
         controlSize = "sm",
         width = 156,
-        tooltip = snapshot and snapshot.connected
-          and "Open today's Xournal journal"
-          or "Tablet inactive — connect tablet to enable New Xournal",
+        tooltip = "Open today's Xournal journal",
         onClick = "onNewXournal",
       }),
       ui.button({
@@ -56,21 +54,14 @@ local function render()
 end
 
 function onNewXournal()
-  readCatState()
-  if not (snapshot and snapshot.connected == true) then
-    noctalia.notifyError("Xournal++", "Tablet inactive — connect the tablet first")
-    render()
-    return
-  end
-
   if not noctalia.runAsync({ "livara-xournal-new-note" }) then
     noctalia.notifyError("Xournal++", "Could not start today's journal note")
   end
 end
 
 function onNewDaily()
-  if not noctalia.runAsync({ "livara-obsidian-daily-note" }) then
-    noctalia.notifyError("Obsidian", "Could not open today's Daily Note")
+  if not noctalia.runAsync({ "livara-daily-note" }) then
+    noctalia.notifyError("Daily Note", "Could not open today's Daily Note")
   end
 end
 

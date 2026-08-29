@@ -34,9 +34,9 @@ Clique fora do panel para fechá-lo.
 
 O widget consulta `livara-tablet-status` a cada 1,5 segundo. O helper é somente leitura e não inicia nem encerra o driver.
 
-O botão **New Xournal** chama `livara-xournal-new-note`. Ele abre a nota do dia em `~/Vault/02 - Xournal++` ou reabre o arquivo existente. A configuração nativa do Xournal++ fornece o template e o ajuste de zoom. O botão fica visualmente secundário e informa que a mesa está inativa quando o dispositivo não está conectado.
+O botão **New Xournal** chama `livara-xournal-new-note`. Ele cria ou abre a nota do dia em `~/Vault/Xournal++`, usando a configuração nativa do Xournal++ para template e zoom. A ação não é bloqueada quando a mesa está desconectada: a mesa controla o estado visual do gato, mas não deve impedir a criação de um documento.
 
-O botão **New Daily** chama `livara-obsidian-daily-note`, que abre a ação oficial `obsidian://daily?vault=Vault`. A pasta, o formato e o template continuam sob responsabilidade do Daily Notes core do Obsidian.
+O botão **New Daily** chama `livara-daily-note`. O helper lê `~/Vault/Config/templates/00 - Daily Note.md`, aplica as variáveis compatíveis com ZenNotes (`{{title}}`, `{{date}}`, `{{date:FORMAT}}`, `{{time}}`, `{{week}}` e `{{cursor}}`), cria o arquivo em `~/Vault/Daily Notes/YYYY-MM-DD.md` e abre-o no Nixvim. A pasta de imagens é `~/Vault/Assets/Images`; o mesmo template é exposto a ZenNotes através de `.zennotes/templates`.
 
 ## Assets
 
