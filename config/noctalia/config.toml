@@ -147,7 +147,7 @@ direction = "center"
 builtin = "Noctalia"
 mode = "dark"
 source = "wallpaper"
-wallpaper_scheme = "m3-content"
+wallpaper_scheme = "m3-fruit-salad"
 
 [theme.templates]
 enable_builtin_templates = true
@@ -210,10 +210,12 @@ directory = "~/Wallpapers"
 
 # The wallpaper repository is synchronized to ~/Wallpapers by nix-conf.
 # No fixed default is declared because noctara-wall.png belongs to Noctara-Dots,
-# not to the canonical Joaoferraz-byte/Wallpapers repository. Automation selects
-# an image from this directory at shell startup.
+# not to the canonical Joaoferraz-byte/Wallpapers repository. The Niri session
+# wrapper selects one image from this directory once after Noctalia starts.
 [wallpaper.automation]
-enabled = true
+# Login selects one random wallpaper through Noctalia IPC. Keep the native
+# hourly scheduler disabled so the selected wallpaper remains stable all day.
+enabled = false
 interval_seconds = 3600
 order = "random"
 recursive = true
