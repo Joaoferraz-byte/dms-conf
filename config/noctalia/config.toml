@@ -161,9 +161,6 @@ community_ids = []
 input_path = "@NOCTALIA_DISCORD_TEMPLATE@"
 output_path = "$XDG_CONFIG_HOME/vesktop/themes/noctalia-material.theme.css"
 
-[theme.templates.user.tauon]
-input_path = "@NOCTALIA_TAUON_TEMPLATE@"
-output_path = "$XDG_DATA_HOME/TauonMusicBox/theme/Noctalia.ttheme"
 
 [theme.templates.user.heroiclauncher]
 input_path = "@NOCTALIA_HEROIC_TEMPLATE@"
