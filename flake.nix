@@ -86,7 +86,7 @@
               -e 's|@NOCTALIA_PRISM_TEMPLATE@|${communityTemplates}/prismlauncher/prismlauncher.json|g' \
               ${self}/config/noctalia/config.toml > config.toml
             noctalia config validate config.toml
-            grep -q 'stroke-width="3"' ${self}/assets/lambda-thick.svg
+            grep -q 'stroke-width="4"' ${self}/assets/lambda-thick.svg
             grep -q 'viewBox="0 0 24 24"' ${self}/assets/lambda-thick.svg
             touch "$out"
           '';
