@@ -10,18 +10,50 @@ local function getLauncherCommand()
     return noctalia.expandPath(launcherCommand)
 end
 
+local function findLauncherConfig(root)
+    local canonical = root .. "/prismlauncher.cfg"
+    if noctalia.fileExists(canonical) then
+        return canonical
+    end
+
+    -- FreeSM keeps PrismLauncher's INI format, but a user-selected Launcher
+    -- Root may use a different filename. `readFile` does not expand globs, so
+    -- enumerate only top-level cfg/ini files and select the one that owns
+    -- InstanceDir. Sorting makes the fallback deterministic.
+    local candidates = {}
+    local entries = noctalia.listDir(root)
+    if entries then
+        for _, name in ipairs(entries) do
+            if name:match("%.[cC][fF][gG]$") or name:match("%.[iI][nN][iI]$") then
+                table.insert(candidates, name)
+            end
+        end
+    end
+    table.sort(candidates)
+    for _, name in ipairs(candidates) do
+        local candidate = root .. "/" .. name
+        if getCfgValue(candidate, "InstanceDir") ~= nil then
+            return candidate
+        end
+    end
+    return nil
+end
+
 local function getInstancesDir()
     local prismPath = getPrismPath()
-
-    local configuredInstanceDir = getCfgValue(prismPath .. "/*.cfg", "InstanceDir")
+    local launcherConfig = findLauncherConfig(prismPath)
+    local configuredInstanceDir = launcherConfig and getCfgValue(launcherConfig, "InstanceDir") or nil
 
     local instances
-    if configuredInstanceDir == nil then -- default path
+    if configuredInstanceDir == nil or configuredInstanceDir == "" then -- default path
         instances = prismPath .. "/instances"
-    elseif configuredInstanceDir:sub(1, 1) == "/" then -- absolute path
-        instances = configuredInstanceDir
-    else -- relative path
-        instances = prismPath .. "/" .. configuredInstanceDir
+    else
+        configuredInstanceDir = noctalia.expandPath(configuredInstanceDir)
+        if configuredInstanceDir:sub(1, 1) == "/" then -- absolute path
+            instances = configuredInstanceDir
+        else -- relative path
+            instances = prismPath .. "/" .. configuredInstanceDir
+        end
     end
     return instances
 end

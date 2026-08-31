@@ -110,6 +110,10 @@
             grep -q 'local function splitCommand' ${self}/plugins/prismlauncher_instances/prismlauncher-instances.luau
             grep -q 'runAsync(argv, function(result)' ${self}/plugins/prismlauncher_instances/prismlauncher-instances.luau
             grep -q 'result.exitCode' ${self}/plugins/prismlauncher_instances/prismlauncher-instances.luau
+            grep -q 'local function findLauncherConfig' ${self}/plugins/prismlauncher_instances/prismlauncher-instances.luau
+            grep -q 'prismlauncher.cfg' ${self}/plugins/prismlauncher_instances/prismlauncher-instances.luau
+            grep -q 'InstanceDir' ${self}/plugins/prismlauncher_instances/prismlauncher-instances.luau
+            ! grep -qF '/*.cfg' ${self}/plugins/prismlauncher_instances/prismlauncher-instances.luau
             ! grep -q 'string.format(launcherCommand' ${self}/plugins/prismlauncher_instances/prismlauncher-instances.luau
             grep -q '^id[[:space:]]*=[[:space:]]*"noctalia/bitwarden"' ${self}/plugins/bitwarden/plugin.toml
             touch "$out"
