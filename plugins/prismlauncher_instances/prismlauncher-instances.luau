@@ -91,15 +91,34 @@ function onQuery(query)
   showResults(query,  loadInstances(), filter)
 end
 
-local function shellQuote(s)
-  return "'" .. s:gsub("'", "'\"'\"'") .. "'"
+local function splitCommand(command)
+  local argv = {}
+  for token in command:gmatch("%S+") do
+    table.insert(argv, token)
+  end
+  return argv
 end
 
 function onActivate(id)
-  local launcherCommand = getLauncherCommand()
-
   if id == "" then return end
-  noctalia.runAsync(string.format(launcherCommand .. " --launch %s &>/dev/null", shellQuote(id)))
+
+  local argv = splitCommand(getLauncherCommand())
+  if #argv == 0 then
+    noctalia.notify("FreeSM Launcher", "No launcher command is configured.")
+    return
+  end
+  table.insert(argv, "--launch")
+  table.insert(argv, id)
+
+  local accepted = noctalia.runAsync(argv, function(result)
+    if result.exitCode ~= 0 then
+      noctalia.log("FreeSM Launcher failed: " .. (result.stderr or "unknown error"))
+      noctalia.notify("FreeSM Launcher", "Unable to launch instance " .. id .. ".")
+    end
+  end)
+  if not accepted then
+    noctalia.notify("FreeSM Launcher", "The launch request was not accepted.")
+  end
 end
 
 -- doesn't handle icons that were changed to different default icon, rest is fine

@@ -107,6 +107,10 @@
             grep -q '^id[[:space:]]*=[[:space:]]*"nomadcxx/gamer-mode"' ${self}/plugins/gamer_mode/plugin.toml
             grep -q '^id[[:space:]]*=[[:space:]]*"nightwatch75/dns-switcher"' ${self}/plugins/dns_switcher/plugin.toml
             grep -q '^id[[:space:]]*=[[:space:]]*"radimous/prismlauncher-instances"' ${self}/plugins/prismlauncher_instances/plugin.toml
+            grep -q 'local function splitCommand' ${self}/plugins/prismlauncher_instances/prismlauncher-instances.luau
+            grep -q 'runAsync(argv, function(result)' ${self}/plugins/prismlauncher_instances/prismlauncher-instances.luau
+            grep -q 'result.exitCode' ${self}/plugins/prismlauncher_instances/prismlauncher-instances.luau
+            ! grep -q 'string.format(launcherCommand' ${self}/plugins/prismlauncher_instances/prismlauncher-instances.luau
             grep -q '^id[[:space:]]*=[[:space:]]*"noctalia/bitwarden"' ${self}/plugins/bitwarden/plugin.toml
             touch "$out"
           '';
