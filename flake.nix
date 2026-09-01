@@ -33,8 +33,8 @@
             else ''end = ["media", "bar", "recorder", "notifications", "session"]'';
           rawSettings = builtins.readFile (self + "/config/noctalia/config.toml");
           settings = pkgs.writeText "noctalia-config.toml" (lib.replaceStrings
-            [ "@NOCTALIA_PALETTE_TEMPLATE@" "@NOCTALIA_NVIM_TEMPLATE@" "@NOCTALIA_FIREFOX_TEMPLATE@" "@NOCTALIA_ZEN_TEMPLATE@" "@NOCTALIA_CONTROL_CENTER_ICON@" "@NOCTALIA_DISCORD_TEMPLATE@" "@NOCTALIA_HEROIC_TEMPLATE@" "@NOCTALIA_PRISM_TEMPLATE@" "end = [\"media\", \"bar\", \"recorder\", \"notifications\", \"session\"]" ]
-            [ "${self}/config/noctalia/templates/livara-palette.json" "${self}/config/noctalia/templates/nvim-base16.lua" "${self}/config/noctalia/templates/firefox.css" "${self}/config/noctalia/templates/zen-userchrome.css" "${self}/assets/japanese-kanji.svg" "${communityTemplates}/discord/discord-material.css" "${communityTemplates}/heroiclauncher/heroic.css" "${communityTemplates}/prismlauncher/prismlauncher.json" barEnd ]
+            [ "@NOCTALIA_PALETTE_TEMPLATE@" "@NOCTALIA_NVIM_TEMPLATE@" "@NOCTALIA_FIREFOX_TEMPLATE@" "@NOCTALIA_ZEN_TEMPLATE@" "@NOCTALIA_CONTROL_CENTER_ICON@" "@NOCTALIA_DISCORD_TEMPLATE@" "@NOCTALIA_HEROIC_TEMPLATE@" "@NOCTALIA_PRISM_TEMPLATE@" "@NOCTALIA_NIRI_TEMPLATE@" "end = [\"media\", \"bar\", \"recorder\", \"notifications\", \"session\"]" ]
+            [ "${self}/config/noctalia/templates/livara-palette.json" "${self}/config/noctalia/templates/nvim-base16.lua" "${self}/config/noctalia/templates/firefox.css" "${self}/config/noctalia/templates/zen-userchrome.css" "${self}/assets/japanese-kanji.svg" "${communityTemplates}/discord/discord-material.css" "${communityTemplates}/heroiclauncher/heroic.css" "${communityTemplates}/prismlauncher/prismlauncher.json" "${self}/config/noctalia/templates/niri.kdl" barEnd ]
             rawSettings);
         in
         {
@@ -83,6 +83,7 @@
               -e 's|@NOCTALIA_DISCORD_TEMPLATE@|${communityTemplates}/discord/discord-material.css|g' \
               -e 's|@NOCTALIA_HEROIC_TEMPLATE@|${communityTemplates}/heroiclauncher/heroic.css|g' \
               -e 's|@NOCTALIA_PRISM_TEMPLATE@|${communityTemplates}/prismlauncher/prismlauncher.json|g' \
+              -e 's|@NOCTALIA_NIRI_TEMPLATE@|${self}/config/noctalia/templates/niri.kdl|g' \
               ${self}/config/noctalia/config.toml > config.toml
             noctalia config validate config.toml
             test -f ${self}/assets/japanese-kanji.svg

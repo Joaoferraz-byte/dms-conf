@@ -183,6 +183,10 @@ input_path = "@NOCTALIA_NVIM_TEMPLATE@"
 output_path = "$XDG_CONFIG_HOME/nvim/lua/matugen_colors.lua"
 post_hook = "pkill -SIGUSR1 nvim || true"
 
+[theme.templates.user.niri]
+input_path = "@NOCTALIA_NIRI_TEMPLATE@"
+output_path = "$XDG_CONFIG_HOME/niri/noctalia.kdl"
+
 [theme.templates.user.firefox]
 input_path = "@NOCTALIA_FIREFOX_TEMPLATE@"
 output_path = "$XDG_STATE_HOME/livara/theme/browser/firefox.css"
@@ -198,18 +202,6 @@ transition = ["disc", "honeycomb", "stripes", "wipe", "zoom"]
 transition_duration = 1500
 transition_on_startup = true
 directory = "~/Wallpapers"
-
-# The wallpaper repository is synchronized to ~/Wallpapers by nix-conf.
-# No fixed default is declared because noctara-wall.png belongs to Noctara-Dots,
-# not to the canonical Joaoferraz-byte/Wallpapers repository. The Niri session
-# wrapper selects one image from this directory once after Noctalia starts.
-[wallpaper.automation]
-# Login selects one random wallpaper through Noctalia IPC. Keep the native
-# hourly scheduler disabled so the selected wallpaper remains stable all day.
-enabled = false
-interval_seconds = 3600
-order = "random"
-recursive = true
 
 [lockscreen]
 enabled = true
