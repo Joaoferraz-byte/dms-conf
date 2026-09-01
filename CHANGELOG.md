@@ -40,8 +40,6 @@ After the Japanese Kanji asset became the active control-center image, the forme
 
 The unused assets and lambda placeholder path were removed from the flake. Historical changelog entries remain intact so the migration path is auditable, while the active flake now validates only the Japanese Kanji asset and the other live templates.
 
-## 2026-09-01 — Restore vector launcher mark
+## 2026-09-01 — Keep the Japanese Kanji launcher mark
 
-The active shell integration had retired the historical `lambda-thick.svg` launcher asset in favor of the Japanese Kanji control-center mark. The user-visible result no longer matched the previously approved launcher artwork and could fall back to a textual lambda glyph.
-
-The Noctalia `widget.control-center` now consumes the restored vector `assets/lambda-thick.svg`, keeps adaptive colorization, and retains `glyph = "lambda"` only as the fallback identifier. The flake substitutes and validates the same asset, viewBox and stroke width in both its generated settings path and static check. The current shell owner is Noctalia v5; no QuickShell runtime was reintroduced.
+The previous follow-up incorrectly reintroduced the retired lambda launcher asset. The selected design is the Japanese Kanji SVG, so the Noctalia `widget.control-center` again consumes `assets/japanese-kanji.svg`, with adaptive colorization and the existing user glyph as fallback. The flake substitution and static check now point only to the Kanji asset and its `viewBox="0 0 38.427 38.427"`. No lambda asset or glyph is active, and no QuickShell runtime was reintroduced.
