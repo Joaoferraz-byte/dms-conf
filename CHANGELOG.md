@@ -33,3 +33,9 @@ A dedicated 512×512 RGB PNG is now derived from the same user profile image wit
 The visible bar button is `widget.control-center`, not the disabled-by-default standalone dock launcher. The prior lambda/user-image wiring therefore changed the control-center button while leaving the supplied launcher asset contract ambiguous; adding a separate `[widget.launcher]` would create a second button and change the bar geometry.
 
 The button now loads the supplied Japanese Kanji SVG through a dedicated `@NOCTALIA_CONTROL_CENTER_ICON@` asset placeholder. Noctalia renders it with `Contain`, preserving the square viewBox and proportions, while `custom_image_colorize = true` applies the active widget/theme color to the alpha mask for adaptive light/dark output. The `user` glyph remains only as fallback metadata. Static checks parse the TOML, parse the SVG, verify the viewBox and require the active placeholder wiring.
+
+## Stage 3 — Retire unused icon wiring (2026-09-01)
+
+After the Japanese Kanji asset became the active control-center image, the former lambda SVG, user portrait PNG and their flake substitution/checks had no runtime consumer. Keeping them made the asset graph claim two obsolete owners and contradicted the current configuration.
+
+The unused assets and lambda placeholder path were removed from the flake. Historical changelog entries remain intact so the migration path is auditable, while the active flake now validates only the Japanese Kanji asset and the other live templates.
