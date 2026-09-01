@@ -348,9 +348,9 @@ format = "{:%H:%M|%a,%b%d}"
 
 [widget.control-center]
 color = "primary"
-custom_image = "@NOCTALIA_LAMBDA_ICON@"
-custom_image_colorize = true
-glyph = "lambda"
+custom_image = "@NOCTALIA_USER_ICON@"
+custom_image_colorize = false
+glyph = "user"
 icon_color = "primary"
 scale = 1.1
 
