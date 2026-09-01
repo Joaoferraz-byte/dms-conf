@@ -118,6 +118,12 @@
             grep -q 'InstanceDir' ${self}/plugins/prismlauncher_instances/prismlauncher-instances.luau
             ! grep -qF '/*.cfg' ${self}/plugins/prismlauncher_instances/prismlauncher-instances.luau
             ! grep -q 'string.format(launcherCommand' ${self}/plugins/prismlauncher_instances/prismlauncher-instances.luau
+            ! grep -q 'getPrismPath' ${self}/plugins/prismlauncher_instances/prismlauncher-instances.luau
+            grep -q 'getLauncherRoot() .. "/icons/"' ${self}/plugins/prismlauncher_instances/prismlauncher-instances.luau
+            grep -q 'data/FreesmLauncher' ${self}/config/noctalia/config.toml
+            ! grep -q 'data/PrismLauncher' ${self}/config/noctalia/config.toml
+            grep -q 'data/FreesmLauncher' ${self}/plugins/prismlauncher_instances/plugin.toml
+            ! grep -q 'data/PrismLauncher' ${self}/plugins/prismlauncher_instances/plugin.toml
             grep -q '^id[[:space:]]*=[[:space:]]*"noctalia/bitwarden"' ${self}/plugins/bitwarden/plugin.toml
             touch "$out"
           '';

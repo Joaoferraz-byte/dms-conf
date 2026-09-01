@@ -220,7 +220,7 @@ function getIcon(instancePath)
         return defaultIcon
     end
 
-    local iconDir = getPrismPath() .. "/icons/"
+    local iconDir = getLauncherRoot() .. "/icons/"
     local bestIcon = findBestIconIn(iconDir, iconVal)
 
     if (bestIcon == nil) then

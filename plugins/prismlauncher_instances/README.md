@@ -7,7 +7,7 @@ Este provider adiciona as instâncias locais do FreeSM Launcher ao launcher do N
 | ID | `radimous/prismlauncher-instances` |
 | Entrada | Launcher provider: `prismlauncher-instances` |
 | Prefixo | `/pl` |
-| Dados | Launcher Root configurável; default `~/.var/app/org.freesmlauncher.FreesmLauncher/data/PrismLauncher` |
+| Dados | Launcher Root configurável; default `~/.var/app/org.freesmlauncher.FreesmLauncher/data/FreesmLauncher` |
 | Execução | `flatpak run org.freesmlauncher.FreesmLauncher --launch <instance>` via argv direto |
 
 ## Requisitos

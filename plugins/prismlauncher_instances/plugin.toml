@@ -23,7 +23,7 @@ key = "prism_path"
 type = "string"
 label_key = "settings.prismlauncher_path.label"
 description_key = "settings.prismlauncher_path.description"
-default = "~/.var/app/org.freesmlauncher.FreesmLauncher/data/PrismLauncher"
+default = "~/.var/app/org.freesmlauncher.FreesmLauncher/data/FreesmLauncher"
 
 [[setting]]
 key = "launcher_exec_command"

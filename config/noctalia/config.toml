@@ -44,7 +44,7 @@ poll_seconds = 10
 privilege_command = ""
 
 [plugin_settings."radimous/prismlauncher-instances"]
-prism_path = "~/.var/app/org.freesmlauncher.FreesmLauncher/data/PrismLauncher"
+prism_path = "~/.var/app/org.freesmlauncher.FreesmLauncher/data/FreesmLauncher"
 launcher_exec_command = "flatpak run org.freesmlauncher.FreesmLauncher"
 
 [plugin_settings."noctalia/bitwarden"]
