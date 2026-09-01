@@ -348,8 +348,10 @@ format = "{:%H:%M|%a,%b%d}"
 
 [widget.control-center]
 color = "primary"
-custom_image = "@NOCTALIA_USER_ICON@"
-custom_image_colorize = false
+# Use the supplied vector mark; Noctalia preserves its aspect ratio with Contain.
+custom_image = "@NOCTALIA_CONTROL_CENTER_ICON@"
+# Tint the alpha mask with the active widget/theme color for adaptive light/dark output.
+custom_image_colorize = true
 glyph = "user"
 icon_color = "primary"
 scale = 1.1

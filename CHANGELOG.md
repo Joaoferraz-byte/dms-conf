@@ -27,3 +27,9 @@ The provider now prioritizes `freesmlauncher.cfg`, retains Prism/PolyMC/MultiMC 
 The control-center widget used the thick Lambda SVG even though the session avatar was already configured through `.face`, `.face.icon` and the Noctalia `avatar_path`. The task concerned the launcher/control-center icon, so changing only the AccountsService avatar would not affect the visible widget.
 
 A dedicated 512×512 RGB PNG is now derived from the same user profile image with a centered square crop that preserves proportions. The widget uses the prepared asset, disables colorization so the portrait is not flattened into the accent color, and switches its glyph metadata to `user`. The flake now checks the asset and placeholder wiring; the system avatar files remain owned by nix-conf.
+
+## Stage 2 — Japanese Kanji control-center icon (2026-09-01)
+
+The visible bar button is `widget.control-center`, not the disabled-by-default standalone dock launcher. The prior lambda/user-image wiring therefore changed the control-center button while leaving the supplied launcher asset contract ambiguous; adding a separate `[widget.launcher]` would create a second button and change the bar geometry.
+
+The button now loads the supplied Japanese Kanji SVG through a dedicated `@NOCTALIA_CONTROL_CENTER_ICON@` asset placeholder. Noctalia renders it with `Contain`, preserving the square viewBox and proportions, while `custom_image_colorize = true` applies the active widget/theme color to the alpha mask for adaptive light/dark output. The `user` glyph remains only as fallback metadata. Static checks parse the TOML, parse the SVG, verify the viewBox and require the active placeholder wiring.
