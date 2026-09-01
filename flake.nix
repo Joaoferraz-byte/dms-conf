@@ -111,6 +111,7 @@
             grep -q 'runAsync(argv, function(result)' ${self}/plugins/prismlauncher_instances/prismlauncher-instances.luau
             grep -q 'result.exitCode' ${self}/plugins/prismlauncher_instances/prismlauncher-instances.luau
             grep -q 'local function findLauncherConfig' ${self}/plugins/prismlauncher_instances/prismlauncher-instances.luau
+            grep -q 'freesmlauncher.cfg' ${self}/plugins/prismlauncher_instances/prismlauncher-instances.luau
             grep -q 'prismlauncher.cfg' ${self}/plugins/prismlauncher_instances/prismlauncher-instances.luau
             grep -q 'InstanceDir' ${self}/plugins/prismlauncher_instances/prismlauncher-instances.luau
             ! grep -qF '/*.cfg' ${self}/plugins/prismlauncher_instances/prismlauncher-instances.luau

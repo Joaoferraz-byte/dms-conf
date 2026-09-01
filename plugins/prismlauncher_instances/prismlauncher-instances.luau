@@ -1,8 +1,8 @@
 --!nonstrict
 
-local function getPrismPath()
-    local prismPath = noctalia.getConfig("prism_path")
-    return noctalia.expandPath(prismPath)
+local function getConfiguredLauncherPath()
+    local configured = noctalia.getConfig("prism_path")
+    return noctalia.expandPath(configured)
 end
 
 local function getLauncherCommand()
@@ -10,16 +10,24 @@ local function getLauncherCommand()
     return noctalia.expandPath(launcherCommand)
 end
 
+local launcherConfigNames = {
+    "freesmlauncher.cfg",
+    "prismlauncher.cfg",
+    "polymc.cfg",
+    "multimc.cfg",
+}
+
 local function findLauncherConfig(root)
-    local canonical = root .. "/prismlauncher.cfg"
-    if noctalia.fileExists(canonical) then
-        return canonical
+    if not root or root == "" then return nil end
+    for _, name in ipairs(launcherConfigNames) do
+        local candidate = root .. "/" .. name
+        if noctalia.fileExists(candidate) then
+            return candidate
+        end
     end
 
-    -- FreeSM keeps PrismLauncher's INI format, but a user-selected Launcher
-    -- Root may use a different filename. `readFile` does not expand globs, so
-    -- enumerate only top-level cfg/ini files and select the one that owns
-    -- InstanceDir. Sorting makes the fallback deterministic.
+    -- Forks retain the Prism INI format but may use a custom filename. Globs
+    -- are not supported by readFile, so enumerate deterministic top-level cfgs.
     local candidates = {}
     local entries = noctalia.listDir(root)
     if entries then
@@ -39,36 +47,82 @@ local function findLauncherConfig(root)
     return nil
 end
 
-local function getInstancesDir()
-    local prismPath = getPrismPath()
-    local launcherConfig = findLauncherConfig(prismPath)
-    local configuredInstanceDir = launcherConfig and getCfgValue(launcherConfig, "InstanceDir") or nil
+local function resolveInstanceDir(root, launcherConfig)
+    local configured = launcherConfig and getCfgValue(launcherConfig, "InstanceDir") or nil
+    if not configured or configured == "" then
+        return root .. "/instances"
+    end
+    configured = noctalia.expandPath(configured)
+    if configured:sub(1, 1) == "/" then
+        return configured
+    end
+    return root .. "/" .. configured
+end
 
-    local instances
-    if configuredInstanceDir == nil or configuredInstanceDir == "" then -- default path
-        instances = prismPath .. "/instances"
-    else
-        configuredInstanceDir = noctalia.expandPath(configuredInstanceDir)
-        if configuredInstanceDir:sub(1, 1) == "/" then -- absolute path
-            instances = configuredInstanceDir
-        else -- relative path
-            instances = prismPath .. "/" .. configuredInstanceDir
+local resolvedRoot
+local resolvedConfig
+local resolvedInstances
+local function resolveLauncher()
+    if resolvedInstances then
+        return resolvedRoot, resolvedConfig, resolvedInstances
+    end
+
+    local configured = getConfiguredLauncherPath()
+    local roots = {
+        configured,
+        "~/.local/share/FreesmLauncher",
+        "~/.local/share/PrismLauncher",
+        "~/.var/app/org.freesmlauncher.FreesmLauncher/data/FreesmLauncher",
+        "~/.var/app/org.prismlauncher.PrismLauncher/data/PrismLauncher",
+    }
+    local seen = {}
+    for _, candidateRoot in ipairs(roots) do
+        if candidateRoot and candidateRoot ~= "" then
+            local root = noctalia.expandPath(candidateRoot)
+            if not seen[root] then
+                seen[root] = true
+                local config = findLauncherConfig(root)
+                local instances = config and resolveInstanceDir(root, config) or nil
+                if instances and noctalia.listDir(instances) ~= nil then
+                    resolvedRoot = root
+                    resolvedConfig = config
+                    resolvedInstances = instances
+                    noctalia.log("Launcher instances root selected: " .. root .. " (" .. (config or "no config") .. ")")
+                    return resolvedRoot, resolvedConfig, resolvedInstances
+                end
+            end
         end
     end
+
+    resolvedRoot = noctalia.expandPath(configured)
+    resolvedInstances = resolvedRoot .. "/instances"
+    noctalia.log("Launcher instances root unavailable; using configured fallback: " .. resolvedInstances)
+    return resolvedRoot, nil, resolvedInstances
+end
+
+local function getLauncherRoot()
+    local root = resolveLauncher()
+    return root
+end
+
+local function getInstancesDir()
+    local _, _, instances = resolveLauncher()
     return instances
 end
 
 local function loadInstances()
     local instances = {}
-    local list = noctalia.listDir(getInstancesDir())
-      if list ~= nil then
+    local instancesDir = getInstancesDir()
+    local list = noctalia.listDir(instancesDir)
+    if list ~= nil then
         for _, name in ipairs(list) do
-            local instanceDir = getInstancesDir() .. "/" .. name
-            if name ~= "" and noctalia.fileExists(instanceDir .. "/instance.cfg") then -- same check as prism to only show instance dirs
+            local instanceDir = instancesDir .. "/" .. name
+            if name ~= "" and noctalia.fileExists(instanceDir .. "/instance.cfg") then
                 table.insert(instances, name)
             end
         end
-      end
+    end
+    table.sort(instances)
     return instances
 end
 
