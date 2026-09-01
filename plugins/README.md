@@ -9,7 +9,6 @@ Os plugins ativos do Noctalia são mantidos como fontes locais versionadas neste
 | `screen_recorder` | `noctalia/screen_recorder` | `noctalia-dev/official-plugins` em `8cb833c3e2502f57e49d34fa64386b4d66794b77` | 3 | `gpu-screen-recorder` | recorder existente; default `focused` e fallback CPU preservados |
 | `screen_toolkit` | `alexander/screen-toolkit` | `noctalia-dev/community-plugins` em `f1b74c2b5cbd5d16983bfdf46a3752d0cd84ffb4` | 13 | `grim`, `slurp`, `tesseract`, `zbar`, `ffmpeg`, `satty`/`swappy`, `imagemagick` | painel e shortcut; não adicionado à barra |
 | `gamer_mode` | `nomadcxx/gamer-mode` | `noctalia-dev/community-plugins` em `f1b74c2b5cbd5d16983bfdf46a3752d0cd84ffb4` | 19 | `pgrep`, `pkill`, `systemctl`; `powerprofilesctl` opcional por host | painel via `Mod+G`; sem widget na barra |
-| `dns_switcher` | `nightwatch75/dns-switcher` | `noctalia-dev/community-plugins` em `f1b74c2b5cbd5d16983bfdf46a3752d0cd84ffb4` | 28 | `nmcli`, `env`; `dig` opcional para lookup | painel via `Mod+Shift+D`; sem widget na barra |
 | `prismlauncher_instances` | `radimous/prismlauncher-instances` | `noctalia-dev/community-plugins` em `f1b74c2b5cbd5d16983bfdf46a3752d0cd84ffb4` | 3 | `flatpak` | provider `/pl` adaptado para FreeSM Flatpak |
 | `bitwarden` | `noctalia/bitwarden` | `noctalia-dev/official-plugins` em `8cb833c3e2502f57e49d34fa64386b4d66794b77` | 8 | `bitwarden-cli` (`bw`) | provider `/bw`; login e unlock continuam interativos |
 
@@ -21,7 +20,7 @@ O atalho `Mod+Shift+S` usa `noctalia msg screenshot-region`, o fluxo nativo base
 
 ## Política de serviços
 
-Gamer Mode e DNS Switcher são serviços/painéis acionados por atalhos, sem ocupar a barra. Gamer Mode usa perfil `light` e preserva a política de energia do host: em `latitude`, TLP continua sendo o owner de energia; em `myMachine`, o power-profiles-daemon já existente pode fornecer `powerprofilesctl`. DNS Switcher começa sem comando de privilégio embutido; se a política local do NetworkManager exigir autenticação, o usuário deve configurar polkit/sudo conscientemente, sem colocar senha no repositório.
+Gamer Mode é um painel acionado por atalho, sem ocupar a barra. Usa perfil `light` e preserva a política de energia do host: em `latitude`, TLP continua sendo o owner de energia; em `myMachine`, o power-profiles-daemon já existente pode fornecer `powerprofilesctl`.
 
 Bitwarden usa o servidor local `bw serve` em loopback e não recebe credenciais por TOML ou argumentos. A primeira autenticação deve ser feita pelo painel `/bw` ou pela CLI, e o vault deve ser bloqueado quando não estiver em uso.
 
@@ -30,7 +29,6 @@ Bitwarden usa o servidor local `bw serve` em loopback e não recebe credenciais 
 - https://docs.noctalia.dev/noctalia/plugins/
 - https://noctalia.dev/plugins/community/screen-toolkit
 - https://noctalia.dev/plugins/community/gamer-mode
-- https://noctalia.dev/plugins/community/dns-switcher
 - https://noctalia.dev/plugins/community/prismlauncher-instances
 - https://noctalia.dev/plugins/official/bitwarden
 - https://docs.noctalia.dev/noctalia/bar/widgets/screenshot/

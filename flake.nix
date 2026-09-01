@@ -58,7 +58,6 @@
             "noctalia/plugins/timer".source = self + "/plugins/timer";
             "noctalia/plugins/screen_toolkit".source = self + "/plugins/screen_toolkit";
             "noctalia/plugins/gamer_mode".source = self + "/plugins/gamer_mode";
-            "noctalia/plugins/dns_switcher".source = self + "/plugins/dns_switcher";
             "noctalia/plugins/prismlauncher_instances".source = self + "/plugins/prismlauncher_instances";
             "noctalia/plugins/bitwarden".source = self + "/plugins/bitwarden";
           };
@@ -107,7 +106,6 @@
             test -f ${self}/plugins/timer/service.luau
             grep -q '^id[[:space:]]*=[[:space:]]*"alexander/screen-toolkit"' ${self}/plugins/screen_toolkit/plugin.toml
             grep -q '^id[[:space:]]*=[[:space:]]*"nomadcxx/gamer-mode"' ${self}/plugins/gamer_mode/plugin.toml
-            grep -q '^id[[:space:]]*=[[:space:]]*"nightwatch75/dns-switcher"' ${self}/plugins/dns_switcher/plugin.toml
             grep -q '^id[[:space:]]*=[[:space:]]*"radimous/prismlauncher-instances"' ${self}/plugins/prismlauncher_instances/plugin.toml
             grep -q 'local function splitCommand' ${self}/plugins/prismlauncher_instances/prismlauncher-instances.luau
             grep -q 'runAsync(argv, function(result)' ${self}/plugins/prismlauncher_instances/prismlauncher-instances.luau

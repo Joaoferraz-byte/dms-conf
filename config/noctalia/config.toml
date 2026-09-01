@@ -9,7 +9,6 @@ enabled = [
   "noctalia/screen_recorder",
   "alexander/screen-toolkit",
   "nomadcxx/gamer-mode",
-  "nightwatch75/dns-switcher",
   "radimous/prismlauncher-instances",
   "noctalia/bitwarden",
 ]
@@ -37,11 +36,6 @@ poll_interval = "3"
 profile = "light"
 auto_performance = true
 show_temps = true
-
-[plugin_settings."nightwatch75/dns-switcher"]
-providers = "google,cloudflare,opendns,adguard,quad9"
-poll_seconds = 10
-privilege_command = ""
 
 [plugin_settings."radimous/prismlauncher-instances"]
 prism_path = "~/.var/app/org.freesmlauncher.FreesmLauncher/data/FreesmLauncher"

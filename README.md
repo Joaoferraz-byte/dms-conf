@@ -24,9 +24,9 @@ Community templates are disabled. They are fetched and cached at runtime rather 
 
 ## Plugins
 
-The active v5 plugins are vendored in this repository: `cat`, `timer`, `screen_recorder`, `screen_toolkit`, `gamer_mode`, `dns_switcher`, `prismlauncher_instances` and `bitwarden`. Their upstream revisions and local policy are recorded in `plugins/README.md`; automatic updates are disabled, so this repository commit is the review boundary. The Noctalia plugin API is still beta.
+The active v5 plugins are vendored in this repository: `cat`, `timer`, `screen_recorder`, `screen_toolkit`, `gamer_mode`, `prismlauncher_instances` and `bitwarden`. Their upstream revisions and local policy are recorded in `plugins/README.md`; automatic updates are disabled, so this repository commit is the review boundary. The Noctalia plugin API is still beta.
 
-The screen recorder and Screen Toolkit use external system binaries, which remain a package concern in `nix-conf`. The Niri bindings route `Mod+Shift+S` to Noctalia’s native `wlr-screencopy` capture and `Mod+Shift+P` to the Screen Toolkit panel; `Mod+G` and `Mod+Shift+D` open Gamer Mode and DNS Switcher panels without adding them to the bar. Prism instances use the FreeSM Flatpak data path and command. Bitwarden is available from the launcher through `/bw` and still requires an interactive CLI login/unlock. Noctalia plugin state is not copied from `Noctara-Dots/local/state`; only stable configuration intent is curated.
+The screen recorder and Screen Toolkit use external system binaries, which remain a package concern in `nix-conf`. The Niri bindings route `Mod+Shift+S` to Noctalia’s native `wlr-screencopy` capture and `Mod+Shift+P` to the Screen Toolkit panel; `Mod+G` opens Gamer Mode without adding it to the bar. Prism instances use the FreeSM Flatpak data path and command. Bitwarden is available from the launcher through `/bw` and still requires an interactive CLI login/unlock. Noctalia plugin state is not copied from `Noctara-Dots/local/state`; only stable configuration intent is curated.
 
 ## Flake usage
 
@@ -57,6 +57,5 @@ Run `nix flake check --no-build` in this repository and in `nix-conf`. On hardwa
 [6]: https://docs.noctalia.dev/noctalia/bar/widgets/screenshot/ "Noctalia v5 screenshot widget"
 [7]: https://noctalia.dev/plugins/community/screen-toolkit "Noctalia Screen Toolkit plugin"
 [8]: https://noctalia.dev/plugins/community/gamer-mode "Noctalia Gamer Mode plugin"
-[9]: https://noctalia.dev/plugins/community/dns-switcher "Noctalia DNS Switcher plugin"
 [10]: https://noctalia.dev/plugins/community/prismlauncher-instances "Noctalia Prism Launcher Instances plugin"
 [11]: https://noctalia.dev/plugins/official/bitwarden "Noctalia Bitwarden plugin"
