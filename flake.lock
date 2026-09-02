@@ -36,25 +36,8 @@
         "type": "github"
       }
     },
-    "community-templates": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1786973326,
-        "narHash": "sha256-rkeSofqOrwZxvrNKfejXMDuS87zcwWME6C4bVqGNjJ0=",
-        "owner": "noctalia-dev",
-        "repo": "community-templates",
-        "rev": "54eb937240fad66b8aa62a9155316ba9bf2b6874",
-        "type": "github"
-      },
-      "original": {
-        "owner": "noctalia-dev",
-        "repo": "community-templates",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
-        "community-templates": "community-templates",
         "nixpkgs": "nixpkgs",
         "noctalia": "noctalia"
       }
