@@ -18,7 +18,7 @@ The Home Manager module enables Noctalia but deliberately disables its systemd u
 
 `config/noctalia/config.toml` contains stable intent only. Noctalia may still write runtime settings and plugin data under the user state directory, but generated widget geometry, monitor-specific IDs, caches, last-wallpaper values and materialized plugin catalogs are not part of this repository. A clean installation receives the same source configuration and deterministic plugin sources; runtime state is recreated by Noctalia.
 
-The built-in Niri template is intentionally not enabled because the upstream template appends an `include "noctalia.kdl"` line to the mutable `config.kdl`. Niri remains declarative in `nix-conf`. Built-in GTK, Qt, Kitty, WezTerm, Starship and KDE templates are enabled because their outputs are separate application theme contracts. The local palette template writes the dark palette consumed by legacy application adapters, while the local NixVim template writes the Lua table expected by `vim-conf`.
+The local Niri template is enabled and writes the optional `~/.config/niri/noctalia.kdl` include used by the declarative `config.kdl` in `nix-conf`. This keeps compositor policy in `nix-conf` while delegating wallpaper-derived focus-ring and border colors to the Noctalia template. Built-in GTK, Qt, Kitty, WezTerm, Starship and KDE templates are enabled because their outputs are separate application theme contracts. The local palette template writes the dark palette consumed by application adapters, while the local NixVim template writes the Lua table expected by `vim-conf`.
 
 Community templates are disabled. They are fetched and cached at runtime rather than pinned by this flake; applications requiring a community template must be ported into `config/noctalia/templates/` with a reviewed upstream revision first.
 
@@ -57,5 +57,5 @@ Run `nix flake check --no-build` in this repository and in `nix-conf`. On hardwa
 [6]: https://docs.noctalia.dev/noctalia/bar/widgets/screenshot/ "Noctalia v5 screenshot widget"
 [7]: https://noctalia.dev/plugins/community/screen-toolkit "Noctalia Screen Toolkit plugin"
 [8]: https://noctalia.dev/plugins/community/gamer-mode "Noctalia Gamer Mode plugin"
-[10]: https://noctalia.dev/plugins/community/prismlauncher-instances "Noctalia Prism Launcher Instances plugin"
-[11]: https://noctalia.dev/plugins/official/bitwarden "Noctalia Bitwarden plugin"
+[9]: https://noctalia.dev/plugins/community/prismlauncher-instances "Noctalia Prism Launcher Instances plugin"
+[10]: https://noctalia.dev/plugins/official/bitwarden "Noctalia Bitwarden plugin"
