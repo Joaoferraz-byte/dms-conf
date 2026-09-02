@@ -19,7 +19,7 @@
       });
 
       overlays.default = final: prev: {
-        noctalia = noctalia.packages.${final.system}.default;
+        noctalia = noctalia.packages.${final.stdenv.hostPlatform.system}.default;
       };
 
       homeModules.default = { config, lib, pkgs, ... }:
