@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "community-templates": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1788391861,
+        "narHash": "sha256-phCZfurjqrOEy+1RssStJlSJM8szykkFteGpTDyad68=",
+        "owner": "noctalia-dev",
+        "repo": "community-templates",
+        "rev": "83808b68b035146d974283042bca4774379bebcc",
+        "type": "github"
+      },
+      "original": {
+        "owner": "noctalia-dev",
+        "repo": "community-templates",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1787070829,
@@ -38,6 +54,7 @@
     },
     "root": {
       "inputs": {
+        "community-templates": "community-templates",
         "nixpkgs": "nixpkgs",
         "noctalia": "noctalia"
       }

@@ -1,0 +1,374 @@
+# Noctalia v5 configuration owned by noctalia-conf.
+# This file contains stable user intent only. GUI state, plugin caches and
+# monitor-specific widget geometry stay in $XDG_STATE_HOME/noctalia/.
+
+[plugins]
+enabled = [
+  "dotnetrob/cat",
+  "noctalia/timer",
+  "noctalia/screen_recorder",
+  "alexander/screen-toolkit",
+  "nomadcxx/gamer-mode",
+  "radimous/prismlauncher-instances",
+  "noctalia/bitwarden",
+]
+auto_update = "none"
+
+[plugin_settings."noctalia/screen_recorder"]
+video_source = "focused"
+
+[plugin_settings."alexander/screen-toolkit"]
+screenshot-path = "~/Pictures/Screenshots"
+video-path = "~/Videos/Screen-Toolkit"
+filename-format = "%Y-%m-%d_%H-%M-%S"
+record-audio-out = false
+record-audio-in = false
+hide-cursor = true
+record-codec = "h264"
+record-fps = 60
+record-skip-confirmation = false
+record-copy-to-clipboard = false
+panel-mode = "standard"
+
+[plugin_settings."nomadcxx/gamer-mode"]
+click_action = "open_panel"
+poll_interval = "3"
+profile = "light"
+auto_performance = true
+show_temps = true
+
+[plugin_settings."radimous/prismlauncher-instances"]
+prism_path = "~/.var/app/org.freesmlauncher.FreesmLauncher/data/FreesmLauncher"
+launcher_exec_command = "flatpak run org.freesmlauncher.FreesmLauncher"
+
+[plugin_settings."noctalia/bitwarden"]
+serve_port = 8087
+auto_serve = true
+vault_timeout = "on_restart"
+copy_field = "password"
+notify_on_copy = true
+
+[shell]
+avatar_path = "~/Pictures/Pfps-and-logos/icon.png"
+font_family = "JetBrains Mono"
+lang = "en-US"
+niri_overview_type_to_launch_enabled = true
+password_style = "random"
+polkit_agent = true
+screen_time_enabled = true
+show_location = false
+
+[accessibility]
+ui_scale = 0.8
+
+[shell.launcher]
+categories = false
+
+[shell.screenshot]
+save_to_file = true
+directory = "~/Pictures/Screenshots"
+filename_pattern = "screenshot_%Y%m%d_%H%M%S"
+copy_to_clipboard = true
+freeze_screen = true
+confirm_region = false
+remember_last_region = true
+show_cursor = false
+pipe_to_command = false
+pipe_command = ""
+
+[shell.launcher.providers.calculator]
+prefix = "="
+
+[shell.panel]
+clipboard_placement = "attached"
+clipboard_position = "auto"
+launcher_placement = "attached"
+open_near_click_clipboard = true
+open_near_click_control_center = true
+open_near_click_launcher = true
+open_near_click_wallpaper = true
+polkit_placement = "attached"
+polkit_position = "auto"
+transparency_mode = "soft"
+
+[shell.screen_corners]
+enabled = true
+
+[shell.session]
+grid = true
+grid_columns = 4
+
+[[shell.session.actions]]
+action = "lock"
+countdown_seconds = 0.0
+enabled = true
+shortcut = "1"
+variant = "default"
+
+[[shell.session.actions]]
+action = "logout"
+countdown_seconds = 0.0
+enabled = true
+shortcut = "2"
+variant = "default"
+
+[[shell.session.actions]]
+action = "lock_and_suspend"
+countdown_seconds = 0.0
+enabled = false
+shortcut = "3"
+variant = "default"
+
+[[shell.session.actions]]
+action = "reboot"
+countdown_seconds = 0.0
+enabled = true
+shortcut = "4"
+variant = "default"
+
+[[shell.session.actions]]
+action = "shutdown"
+countdown_seconds = 0.0
+enabled = true
+shortcut = "5"
+variant = "destructive"
+
+[shell.shadow]
+alpha = 0.88
+direction = "center"
+
+[theme]
+builtin = "Noctalia"
+mode = "dark"
+source = "wallpaper"
+wallpaper_scheme = "m3-fruit-salad"
+
+[theme.templates]
+enable_builtin_templates = true
+# Do not enable the built-in niri template: it mutates config.kdl by appending
+# an include. Nix owns the compositor configuration as a single source.
+builtin_ids = ["gtk3", "gtk4", "kcolorscheme", "kitty", "qt", "starship", "wezterm"]
+enable_community_templates = false
+community_ids = []
+
+[theme.templates.user.discord_material_vesktop]
+input_path = "@NOCTALIA_DISCORD_TEMPLATE@"
+output_path = "$XDG_CONFIG_HOME/vesktop/themes/noctalia-material.theme.css"
+
+
+[theme.templates.user.heroiclauncher]
+input_path = "@NOCTALIA_HEROIC_TEMPLATE@"
+output_path = "$XDG_CONFIG_HOME/heroic/themes/matugen.css"
+requires_path = "~/.config/heroic"
+
+[theme.templates.user.heroiclauncher_flatpak]
+input_path = "@NOCTALIA_HEROIC_TEMPLATE@"
+output_path = "~/.var/app/com.heroicgameslauncher.hgl/config/heroic/themes/matugen.css"
+requires_path = "~/.var/app/com.heroicgameslauncher.hgl"
+
+[theme.templates.user.prismlauncher]
+input_path = "@NOCTALIA_PRISM_TEMPLATE@"
+output_path = "$XDG_DATA_HOME/PrismLauncher/themes/Matugen/theme.json"
+
+[theme.templates.user.livara_palette]
+input_path = "@NOCTALIA_PALETTE_TEMPLATE@"
+output_path = [
+  "$XDG_STATE_HOME/livara/theme/palette.dark.json",
+  "$XDG_STATE_HOME/livara/theme/palette.json",
+  "$XDG_STATE_HOME/livara/theme/palette.light.json",
+]
+
+[theme.templates.user.nvim_base16]
+input_path = "@NOCTALIA_NVIM_TEMPLATE@"
+output_path = "$XDG_CONFIG_HOME/nvim/lua/matugen_colors.lua"
+post_hook = "pkill -SIGUSR1 nvim || true"
+
+[theme.templates.user.niri]
+input_path = "@NOCTALIA_NIRI_TEMPLATE@"
+output_path = "$XDG_CONFIG_HOME/niri/noctalia.kdl"
+
+[theme.templates.user.firefox]
+input_path = "@NOCTALIA_FIREFOX_TEMPLATE@"
+output_path = "$XDG_STATE_HOME/livara/theme/browser/firefox.css"
+
+[theme.templates.user.zen_browser]
+input_path = "@NOCTALIA_ZEN_TEMPLATE@"
+output_path = "$XDG_STATE_HOME/livara/theme/browser/zen.css"
+
+[wallpaper]
+enabled = true
+fill_mode = "crop"
+transition = ["disc", "honeycomb", "stripes", "wipe", "zoom"]
+transition_duration = 1500
+transition_on_startup = true
+directory = "~/Wallpapers"
+
+[wallpaper.automation]
+enabled = false
+interval_seconds = 1500
+order = "random"
+recursive = false
+
+[lockscreen]
+enabled = true
+blurred_desktop = false
+blur_intensity = 0.5
+tint_intensity = 0.3
+
+[system.monitor]
+enabled = true
+cpu_poll_seconds = 2.0
+gpu_poll_seconds = 5.0
+memory_poll_seconds = 2.0
+network_poll_seconds = 3.0
+disk_poll_seconds = 10.0
+
+[calendar]
+# Calendar synchronization remains opt-in; no account is declared here.
+enabled = false
+
+[nightlight]
+enabled = true
+
+[weather]
+enabled = true
+refresh_minutes = 30
+unit = "metric"
+effects = true
+
+[location]
+# Fixed geocoding keeps weather/night-light behavior deterministic on this host.
+auto_locate = false
+address = "Jardim João XXIII, São Paulo, SP, Brasil"
+
+[idle]
+behavior_order = ["lock", "screen-off", "lock-and-suspend"]
+pre_action_fade_seconds = 5.0
+
+[idle.behavior.lock]
+action = "lock"
+enabled = true
+timeout = 90.0
+
+[idle.behavior.screen-off]
+action = "screen_off"
+enabled = true
+timeout = 150.0
+
+[idle.behavior.lock-and-suspend]
+action = "lock_and_suspend"
+enabled = true
+timeout = 420.0
+
+[control_center]
+hidden_tabs = ["monitor"]
+sidebar_section = "none"
+
+[[control_center.shortcuts]]
+type = "wifi"
+
+[[control_center.shortcuts]]
+type = "bluetooth"
+
+[[control_center.shortcuts]]
+type = "caffeine"
+
+[[control_center.shortcuts]]
+type = "dark_mode"
+
+[[control_center.shortcuts]]
+type = "alexander/screen-toolkit:toggle"
+
+[audio]
+enable_sounds = true
+sound_volume = 1.0
+
+[notification]
+layer = "overlay"
+
+[osd]
+orientation = "vertical"
+position = "top_right"
+position_vertical = "top_right"
+
+[osd.kinds]
+media = false
+
+[bar]
+order = ["default"]
+
+[bar.default]
+position = "top"
+enabled = true
+auto_hide = false
+reserve_space = true
+layer = "top"
+thickness = 33
+background_opacity = 0.88
+# Keep attached panels visually continuous with the bar on fractional-scale outputs.
+contact_shadow = false
+panel_overlap = 1
+margin_ends = 215
+padding = 15
+radius = 80
+widget_spacing = 10
+start = ["control-center", "workspaces", "sysmon"]
+center = ["cat", "clock"]
+# Battery is inserted by the host-specific Home Manager adapter on latitude.
+end = ["media", "bar", "recorder", "notifications", "session"]
+
+[widget.bar]
+type = "noctalia/timer:bar"
+show_idle_on_horizontal = false
+
+[widget.recorder]
+type = "noctalia/screen_recorder:recorder"
+
+[widget.cat]
+type = "dotnetrob/cat:cat"
+cat_size = 32
+cat_color_mode = "theme"
+
+[widget.battery]
+type = "battery"
+device = "BAT0"
+display_mode = "graphic"
+show_label = false
+
+[widget.clock]
+format = "{:%H:%M|%a,%b%d}"
+
+[widget.control-center]
+color = "primary"
+# Use the supplied vector mark; Noctalia preserves its aspect ratio with Contain.
+custom_image = "@NOCTALIA_CONTROL_CENTER_ICON@"
+# Tint the supplied Japanese Kanji vector mark with the active widget/theme color.
+custom_image_colorize = true
+glyph = "user"
+icon_color = "primary"
+scale = 1.1
+
+[widget.media]
+# Keep the square artwork inside the 33px bar thickness; v5 clips it with
+# radius = artSize / 2 for a true circle.
+art_size = 28
+hide_when_no_media = true
+max_length = 149
+min_length = 198
+title_scroll = "on_hover"
+
+[widget.session]
+color = "#FF000C"
+glyph = "power"
+
+[widget.sysmon]
+stat = "cpu_temp"
+
+[widget.workspaces]
+show_labels = false
+label_source = "id"
+
+[hooks]
+# Noctalia owns the palette and updates both compositor and application
+# adapters from the same generated JSON palette.
+colors_changed = "test -x ~/.local/bin/sync-noctalia-niri-colors && ~/.local/bin/sync-noctalia-niri-colors; ~/.local/bin/sync-livara-themes dark"
