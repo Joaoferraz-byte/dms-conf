@@ -59,3 +59,26 @@ Run `nix flake check --no-build` in this repository and in `nix-conf`. On hardwa
 [8]: https://noctalia.dev/plugins/community/gamer-mode "Noctalia Gamer Mode plugin"
 [9]: https://noctalia.dev/plugins/community/prismlauncher-instances "Noctalia Prism Launcher Instances plugin"
 [10]: https://noctalia.dev/plugins/official/bitwarden "Noctalia Bitwarden plugin"
+
+## Repository structure
+
+```text
+.
+CHANGELOG.md
+README.md
+assets
+  └── assets/japanese-kanji.svg
+config
+  └── config/noctalia
+flake.lock
+flake.nix
+plugins
+  └── plugins/README.md
+  └── plugins/bitwarden
+  └── plugins/cat
+  └── plugins/gamer_mode
+  └── plugins/prismlauncher_instances
+  └── plugins/screen_recorder
+  └── plugins/screen_toolkit
+  └── plugins/timer
+```
