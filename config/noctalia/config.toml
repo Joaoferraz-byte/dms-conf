@@ -195,6 +195,12 @@ output_path = "$XDG_STATE_HOME/livara/theme/browser/firefox.css"
 input_path = "@NOCTALIA_ZEN_TEMPLATE@"
 output_path = "$XDG_STATE_HOME/livara/theme/browser/zen.css"
 
+[theme.templates.user.spicetify]
+input_path = "@NOCTALIA_SPICETIFY_TEMPLATE@"
+output_path = "$XDG_CONFIG_HOME/spicetify/Themes/Livara/color.ini"
+post_hook = "spicetify -q apply --no-restart"
+hook_async = false
+
 [wallpaper]
 enabled = true
 fill_mode = "crop"

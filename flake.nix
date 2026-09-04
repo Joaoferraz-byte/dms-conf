@@ -34,6 +34,7 @@
             "@NOCTALIA_NVIM_TEMPLATE@"
             "@NOCTALIA_FIREFOX_TEMPLATE@"
             "@NOCTALIA_ZEN_TEMPLATE@"
+            "@NOCTALIA_SPICETIFY_TEMPLATE@"
             "@NOCTALIA_CONTROL_CENTER_ICON@"
             "@NOCTALIA_DISCORD_TEMPLATE@"
             "@NOCTALIA_HEROIC_TEMPLATE@"
@@ -46,6 +47,7 @@
             "${configDirectory}/templates/nvim-base16.lua"
             "${configDirectory}/templates/firefox.css"
             "${configDirectory}/templates/zen-userchrome.css"
+            "${configDirectory}/templates/spicetify.ini"
             controlCenterIcon
             "${communityTemplates}/discord/discord-material.css"
             "${communityTemplates}/heroiclauncher/heroic.css"
@@ -101,6 +103,7 @@
               -e 's|@NOCTALIA_NVIM_TEMPLATE@|${configDirectory}/templates/nvim-base16.lua|g' \
               -e 's|@NOCTALIA_FIREFOX_TEMPLATE@|${configDirectory}/templates/firefox.css|g' \
               -e 's|@NOCTALIA_ZEN_TEMPLATE@|${configDirectory}/templates/zen-userchrome.css|g' \
+              -e 's|@NOCTALIA_SPICETIFY_TEMPLATE@|${configDirectory}/templates/spicetify.ini|g' \
               -e 's|@NOCTALIA_CONTROL_CENTER_ICON@|${controlCenterIcon}|g' \
               -e 's|@NOCTALIA_DISCORD_TEMPLATE@|${communityTemplates}/discord/discord-material.css|g' \
               -e 's|@NOCTALIA_HEROIC_TEMPLATE@|${communityTemplates}/heroiclauncher/heroic.css|g' \
@@ -109,6 +112,9 @@
               ${configDirectory}/config.toml > config.toml
             noctalia config validate config.toml
             test -f ${controlCenterIcon}
+            test -f ${configDirectory}/templates/spicetify.ini
+            grep -q 'spicetify -q apply --no-restart' ${configDirectory}/config.toml
+            grep -q 'hook_async = false' ${configDirectory}/config.toml
             grep -q 'custom_image = "@NOCTALIA_CONTROL_CENTER_ICON@"' ${configDirectory}/config.toml
             grep -q 'custom_image_colorize = true' ${configDirectory}/config.toml
             touch "$out"

@@ -24,7 +24,7 @@ Niri remains the compositor owner in `nix-conf`. `shell-conf` is the intermediar
 | `homeModules.default` | Imports the upstream Home Manager module, links the customized TOML and plugins, and disables the duplicate systemd lifecycle because Niri starts the single process. |
 | `homeModules.noctalia` | Compatibility alias for the default module. |
 
-`homeModules.default` accepts the optional `desktopProfile.monitorProfile` argument so the battery widget remains host-specific without moving shell policy into the host repository. Generated palette files and application profiles remain mutable XDG state; source configuration and plugin code remain pinned in this repository.
+`homeModules.default` accepts the optional `desktopProfile.monitorProfile` argument so the battery widget remains host-specific without moving shell policy into the host repository. Generated palette files and application profiles remain mutable XDG state; source configuration and plugin code remain pinned in this repository. The Spicetify user template writes the `custom` color scheme to the user configuration and uses a synchronous `spicetify apply --no-restart` hook; it requires a writable runtime Spotify installation because the Nix-built package remains immutable.
 
 ## Composition
 
